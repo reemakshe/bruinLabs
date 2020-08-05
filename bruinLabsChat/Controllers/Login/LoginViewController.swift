@@ -65,8 +65,11 @@ class LoginViewController: UIViewController {
                 }
                 
                 else {
-                    let user = result!.user
-                    self.navigationController?.dismiss(animated: true, completion: nil)
+//                    let user = result!.user
+                    UserDefaults.standard.set(email, forKey: "email")
+//                    UserDefaults.standard.set(<#T##value: Any?##Any?#>, forKey: <#T##String#>)
+//                    self.navigationController?.dismiss(animated: true, completion: nil)
+                    self.navigationController?.pushViewController(ConversationsViewController(), animated: true)
                 }
             }
             

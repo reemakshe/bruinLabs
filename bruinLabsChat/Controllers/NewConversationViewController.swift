@@ -9,22 +9,186 @@
 import UIKit
 
 class NewConversationViewController: UIViewController {
+    
+    public var completion: (([String : [String : String]]?) -> Void)?
+    
+    private var groups = [String : [String : [String : String]]]()
+    private var results = [Dictionary<String, Int>.Element]()
+//    private var groups = [String : Any]()
+    private var hasFetched = false
+    
+    private let searchBar : UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = "find a new group..."
+        return searchBar
+    }()
+    
+    private let tableView: UITableView = {
+        let table = UITableView()
+        table.isHidden = true
+        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        return table
+    }()
+    
+    private let noResultsLabel : UILabel = {
+        let label = UILabel()
+        label.isHidden = true
+        label.text = "no matches :("
+        label.textAlignment = .center
+        label.textColor = .gray
+        label.font = .systemFont(ofSize: 21, weight: .medium)
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        searchBar.delegate = self
+        view.backgroundColor = .white
+        view.addSubview(tableView)
+        view.addSubview(noResultsLabel)
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        navigationController?.navigationBar.topItem?.titleView = searchBar
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "cancel", style: .done, target: self, action: #selector(dismissSelf))
+        
+        searchBar.becomeFirstResponder()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.frame = view.bounds
+        noResultsLabel.frame = CGRect(x: view.width/4, y: (view.height-200)/2, width: view.width/2, height: 200)
     }
-    */
+    
+    @objc private func dismissSelf() {
+        dismiss(animated: true, completion: nil)
+    }
 
+
+}
+
+extension NewConversationViewController : UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("results \(results)")
+        print("results count \(self.results.count)")
+//        return self.results.count
+        //choosing at most the 5 most relevant groups to display
+        return min(self.results.count, 5)
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("putting thing in table view")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel!.text = results[indexPath.row].key
+        print(results[indexPath.row].key)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        //start conversation
+        let groupName = results[indexPath.row].key
+//        let groupMembers = Array((groups[groupName])!["members"]?.keys)
+        let groupMembersNames = (groups[groupName])!["members"] as! [String : String]
+//        let groupNames = Array((groups[groupName])!["names"]!.keys)
+        let targetGroup = [groupName : groupMembersNames]
+//        let targetGroup = groups[results[indexPath.row].key]
+        completion?(targetGroup)
+        dismiss(animated: true) { [weak self] in
+            self?.completion?(targetGroup)
+        }
+    }
+}
+
+extension NewConversationViewController : UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text, !text.replacingOccurrences(of: " ", with: "").isEmpty else {
+            return
+        }
+        
+        searchBar.resignFirstResponder()
+        
+        results.removeAll()
+        self.searchGroups(query: text)
+    }
+    
+    func searchGroups(query: String) {
+        //check if there is a group with that name or groups with tags in query
+        //try -> for each word in query, if a group name/tags has no common things do not show it, then rank
+        //further based on how many words in query are in that
+        //maybe gives 2x points if the words are in the name of the group?
+        
+        if hasFetched {
+            filterGroups(with: query)
+        }
+        
+        else {
+            DatabaseManager.shared.getAllUsers { [weak self] (result) in
+                switch result {
+                case .success(let groupsCollection):
+//                    print("calling filter")
+                    self?.groups = groupsCollection
+                    self?.hasFetched = true
+                    self?.filterGroups(with: query)
+                case .failure(let error):
+                    print("Failed to get groups \(error)")
+                }
+            }
+        }
+        
+        
+    }
+    
+    func filterGroups(with term : String) {
+        guard hasFetched else {
+            return
+        }
+        
+//        var results : [String : Any] = self.groups.filter { (term, Any) -> Bool in
+//
+//        }
+        var groupMatches = [String : Int]()
+        for (group, results) in groups {
+//            print("filtering")
+            groupMatches[group] = Tools.levenshtein(aStr: group, bStr: term)
+
+            let tags = results["tags"]
+            for (tag, _) in tags! {
+                var val : Int
+                if groupMatches[group] == nil {
+                    val = 0
+                }
+                else {
+                    val = groupMatches[group]!
+                }
+                val += Tools.levenshtein(aStr: tag, bStr: term)
+                groupMatches[group] = val
+            }
+//            print("tags: \(tags)")
+            
+        }
+        
+        var sortedGroupMatches = groupMatches.sorted(by: { $0.value >= $1.value })
+//        print(sortedGroupMatches)
+        self.results = sortedGroupMatches
+//        print("key \(results[0].key)")
+        
+        updateUI()
+        
+    }
+    
+    func updateUI() {
+        if results.isEmpty {
+            self.noResultsLabel.isHidden = false
+            self.tableView.isHidden = true
+        }
+        else {
+            self.noResultsLabel.isHidden = true
+            self.tableView.isHidden = false
+            self.tableView.reloadData()
+        }
+    }
 }

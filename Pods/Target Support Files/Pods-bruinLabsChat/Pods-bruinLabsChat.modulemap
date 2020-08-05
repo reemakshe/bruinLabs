@@ -1,0 +1,6 @@
+framework module Pods_bruinLabsChat {
+  umbrella header "Pods-bruinLabsChat-umbrella.h"
+
+  export *
+  module * { export * }
+}
