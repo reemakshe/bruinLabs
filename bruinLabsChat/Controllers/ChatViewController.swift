@@ -48,10 +48,11 @@ class ChatViewController: MessagesViewController {
     }()
     
     public var isNewConversation = false
+    public let otherUserEmail : String
     
-    public var otherMembers : [String : String]
+//    public var otherMembers : [String : String]
     
-    public var group : String
+//    public var group : String
     
     let conversationid : String?
 
@@ -82,6 +83,7 @@ class ChatViewController: MessagesViewController {
                 self?.messages = messages
                 DispatchQueue.main.async {
                     self?.messagesCollectionView.reloadDataAndKeepOffset()
+                    self?.messagesCollectionView.scrollToBottom()
 
                 }
             case .failure(let error):
@@ -91,14 +93,12 @@ class ChatViewController: MessagesViewController {
     }
     
     
-    init(group_name: String, emails: [String : String], id: String?) {
-        self.otherMembers = emails
-        self.group = group_name
+    init(otherUser: String, id: String?) {
+        self.otherUserEmail = otherUser
+//        self.group = group_name
         self.conversationid = id
         super.init(nibName: nil, bundle: nil)
-        if let conversationId = conversationid {
-            self.listenForMessages(id: conversationId)
-        }
+
     }
     
     required init?(coder: NSCoder) {
@@ -122,7 +122,9 @@ class ChatViewController: MessagesViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         messageInputBar.inputTextView.becomeFirstResponder()
-
+        if let conversationId = conversationid {
+            self.listenForMessages(id: conversationId)
+        }
     }
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
@@ -155,41 +157,41 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         
         if isNewConversation {
             print("in new conversation block")
-            DatabaseManager.shared.createNewConversation(group: group, with: otherMembers, firstMessage: message) { [weak self] (success) in
+            DatabaseManager.shared.createNewConversation(otherUserName: self.title ?? "user", otherUserEmail: otherUserEmail, firstMessage: message) { [weak self] (success) in
                 if success {
                     print("Message sent")
                     self?.isNewConversation = false
                 }
                 else {
                     print("message failed to send")
-                    DatabaseManager.shared.sendMessage(to: (self?.conversationid)!, message: message) { (success) in
-                        if success {
-                            print("message sent")
-                        }
-                        else {
-                            print("message failed to send")
-                        }
-                    }
+//                    DatabaseManager.shared.sendMessage(otherUserEmail: self.otherUserEmail, conversation: (self?.conversationid)!, message: message) { (success) in
+//                        if success {
+//                            print("message sent")
+//                        }
+//                        else {
+//                            print("message failed to send")
+//                        }
+//                    }
                 }
             }
         }
         
         else {
             print("in existing conversation block")
-            DatabaseManager.shared.sendMessage(to: self.conversationid!, message: message) { (success) in
+            DatabaseManager.shared.sendMessage(otherUserEmail: otherUserEmail, conversationId: self.conversationid!, message: message) { (success) in
                 if success {
                     print("Message sent")
                 }
                 else {
                     print("message failed to send")
-                    DatabaseManager.shared.sendMessage(to: (self.conversationid)!, message: message) { (success) in
-                        if success {
-                            print("message sent")
-                        }
-                        else {
-                            print("message failed to send")
-                        }
-                    }
+//                    DatabaseManager.shared.sendMessage(otherUserEmail: self.otherUserEmail, conversation: (self.conversationid)!, message: message) { (success) in
+//                        if success {
+//                            print("message sent")
+//                        }
+//                        else {
+//                            print("message failed to send")
+//                        }
+//                    }
                 }
             }
         }
@@ -201,7 +203,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         guard let currentUserEmail = FirebaseAuth.Auth.auth().currentUser?.email else {
             return nil
         }
-        let newIdentifier = "\(Array(otherMembers.keys)[0])_\(dateString)_\(DatabaseManager.safeEmail(email: currentUserEmail))"
+        let newIdentifier = "\(otherUserEmail)_\(dateString)_\(DatabaseManager.safeEmail(email: currentUserEmail))"
         return newIdentifier
     }
 }

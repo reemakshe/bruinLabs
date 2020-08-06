@@ -7,13 +7,17 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class NewConversationViewController: UIViewController {
     
-    public var completion: (([String : [String : String]]?) -> Void)?
+    public var completion: (([String : String] )-> Void)?
     
-    private var groups = [String : [String : [String : String]]]()
-    private var results = [Dictionary<String, Int>.Element]()
+//    private var groups = [String : [String : [String : String]]]()
+//    private var results = [Dictionary<String, Int>.Element]()
+    private var users = [[String : String]]()
+    private var results = [[String : String]]()
+
 //    private var groups = [String : Any]()
     private var hasFetched = false
     
@@ -75,30 +79,35 @@ extension NewConversationViewController : UITableViewDelegate, UITableViewDataSo
         print("results count \(self.results.count)")
 //        return self.results.count
         //choosing at most the 5 most relevant groups to display
-        return min(self.results.count, 5)
+//        return min(self.results.count, 5)
+        return results.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("putting thing in table view")
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel!.text = results[indexPath.row].key
-        print(results[indexPath.row].key)
+        cell.textLabel!.text = results[indexPath.row]["name"]
+        print(results[indexPath.row]["name"])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        //start conversation
-        let groupName = results[indexPath.row].key
-//        let groupMembers = Array((groups[groupName])!["members"]?.keys)
-        let groupMembersNames = (groups[groupName])!["members"] as! [String : String]
-//        let groupNames = Array((groups[groupName])!["names"]!.keys)
-        let targetGroup = [groupName : groupMembersNames]
-//        let targetGroup = groups[results[indexPath.row].key]
-        completion?(targetGroup)
+        let targetUserData = results[indexPath.row]
         dismiss(animated: true) { [weak self] in
-            self?.completion?(targetGroup)
+            self?.completion?(targetUserData)
         }
+        //start conversation
+//        let name = results[indexPath.row]["name"]
+////        let groupMembers = Array((groups[groupName])!["members"]?.keys)
+////        let groupMembersNames = (groups[groupName])!["members"] as! [String : String]
+////        let groupNames = Array((groups[groupName])!["names"]!.keys)
+//        let targetGroup = [groupName : groupMembersNames]
+////        let targetGroup = groups[results[indexPath.row].key]
+//        completion?(targetGroup)
+//        dismiss(animated: true) { [weak self] in
+//            self?.completion?(targetGroup)
+//        }
     }
 }
 
@@ -112,17 +121,17 @@ extension NewConversationViewController : UISearchBarDelegate {
         searchBar.resignFirstResponder()
         
         results.removeAll()
-        self.searchGroups(query: text)
+        self.searchUsers(query: text)
     }
     
-    func searchGroups(query: String) {
+    func searchUsers(query: String) {
         //check if there is a group with that name or groups with tags in query
         //try -> for each word in query, if a group name/tags has no common things do not show it, then rank
         //further based on how many words in query are in that
         //maybe gives 2x points if the words are in the name of the group?
         
         if hasFetched {
-            filterGroups(with: query)
+            filterUsers(query: query)
         }
         
         else {
@@ -130,9 +139,9 @@ extension NewConversationViewController : UISearchBarDelegate {
                 switch result {
                 case .success(let groupsCollection):
 //                    print("calling filter")
-                    self?.groups = groupsCollection
+                    self?.users = groupsCollection
                     self?.hasFetched = true
-                    self?.filterGroups(with: query)
+                    self?.filterUsers(query: query)
                 case .failure(let error):
                     print("Failed to get groups \(error)")
                 }
@@ -142,43 +151,65 @@ extension NewConversationViewController : UISearchBarDelegate {
         
     }
     
-    func filterGroups(with term : String) {
-        guard hasFetched else {
+    func filterUsers(query : String) {
+        guard hasFetched, let email = FirebaseAuth.Auth.auth().currentUser?.email, let safeEmail = DatabaseManager.safeEmail(email: email) as? String else {
             return
         }
+        print("not filtered results: \(users)")
         
-//        var results : [String : Any] = self.groups.filter { (term, Any) -> Bool in
-//
-//        }
-        var groupMatches = [String : Int]()
-        for (group, results) in groups {
-//            print("filtering")
-            groupMatches[group] = Tools.levenshtein(aStr: group, bStr: term)
-
-            let tags = results["tags"]
-            for (tag, _) in tags! {
-                var val : Int
-                if groupMatches[group] == nil {
-                    val = 0
-                }
-                else {
-                    val = groupMatches[group]!
-                }
-                val += Tools.levenshtein(aStr: tag, bStr: term)
-                groupMatches[group] = val
+        var results: [[String : String]] = self.users.filter({
+            guard let name = $0["name"]?.lowercased() else {
+                return false
             }
-//            print("tags: \(tags)")
             
-        }
+//            let email = $0["email"]
+            
+            return name.hasPrefix(query.lowercased())
+        })
         
-        var sortedGroupMatches = groupMatches.sorted(by: { $0.value >= $1.value })
-//        print(sortedGroupMatches)
-        self.results = sortedGroupMatches
-//        print("key \(results[0].key)")
-        
+        print("filtered results: \(results)")
+        self.results = results
         updateUI()
         
     }
+    
+//    func filterGroups(with term : String) {
+//        guard hasFetched else {
+//            return
+//        }
+//        
+////        var results : [String : Any] = self.groups.filter { (term, Any) -> Bool in
+////
+////        }
+//        var groupMatches = [String : Int]()
+//        for (group, results) in groups {
+////            print("filtering")
+//            groupMatches[group] = Tools.levenshtein(aStr: group, bStr: term)
+//
+//            let tags = results["tags"]
+//            for (tag, _) in tags! {
+//                var val : Int
+//                if groupMatches[group] == nil {
+//                    val = 0
+//                }
+//                else {
+//                    val = groupMatches[group]!
+//                }
+//                val += Tools.levenshtein(aStr: tag, bStr: term)
+//                groupMatches[group] = val
+//            }
+////            print("tags: \(tags)")
+//            
+//        }
+//        
+//        var sortedGroupMatches = groupMatches.sorted(by: { $0.value >= $1.value })
+////        print(sortedGroupMatches)
+//        self.results = sortedGroupMatches
+////        print("key \(results[0].key)")
+//        
+//        updateUI()
+//        
+//    }
     
     func updateUI() {
         if results.isEmpty {

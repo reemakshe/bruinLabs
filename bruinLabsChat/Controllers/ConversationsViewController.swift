@@ -13,7 +13,7 @@ import JGProgressHUD
 struct Conversation {
     let id : String
     let name: String
-    let other_users : [String : String]
+    let other_user_email : String
     let latest_message : LatestMessage
     
 }
@@ -89,17 +89,23 @@ class ConversationsViewController: UIViewController {
         let vc = NewConversationViewController()
         vc.completion = {[weak self] result in
             print("\(result)")
-            self?.createNewConversation(result: result!)
+            self?.createNewConversation(result: result)
         }
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
     
-    private func createNewConversation(result: [String : [String : String]]) {
-        let groupName = Array(result.keys)[0]
-        let members = result[groupName]
+    private func createNewConversation(result: [String : String]) {
+//        let groupName = Array(result.keys)[0]
+//        let members = result[groupName]
 //        let names = result["names"]
-        let vc = ChatViewController(group_name: groupName, emails: members!, id: "")
+        print("results: \(result)")
+        guard let name = result["name"], let email = result["email"] else {
+            print("NBAME EMIAL ERROR")
+            return
+        }
+        let vc = ChatViewController(otherUser: email, id: nil)
+        vc.title = name
 //        let vc = ChatViewController(gr: groupName, with: members!)
         vc.isNewConversation = true
 //        let nav = UINavigationController(rootViewController: ConversationsViewController())
@@ -107,15 +113,16 @@ class ConversationsViewController: UIViewController {
 //        vc.navigationItem.largeTitleDisplayMode = .never
 //        nav.pushViewController(vc, animated: true)
 //        self.view.window?.makeKeyAndVisible()
-        vc.title = groupName
+//        vc.title = groupName
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
+        print("putting new convo chat controller screen")
     }
     
     @objc private func didTapAddButton() {
-        let vc = NewGroupViewController()
-        let nav = UINavigationController(rootViewController: vc)
-        present(nav, animated: true)
+//        let vc = NewGroupViewController()
+//        let nav = UINavigationController(rootViewController: vc)
+//        present(nav, animated: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -174,17 +181,20 @@ extension ConversationsViewController : UITableViewDelegate, UITableViewDataSour
         tableView.deselectRow(at: indexPath, animated: true)
 //        navigationController = UINavigationController(rootViewController: ConversationsViewController())
 //        print(navigationController.debugDescription)
-        let nav = UINavigationController(rootViewController: ConversationsViewController())
+//        let nav = UINavigationController(rootViewController: ConversationsViewController())
 //        print(navigationController.debugDescription)
 
-        self.view.window?.rootViewController = nav
-        let vc = ChatViewController(group_name: model.name, emails: model.other_users, id: model.id)
+//        self.view.window?.rootViewController = nav
+        let vc = ChatViewController(otherUser: model.other_user_email, id: model.id)
+//        let vc = ChatViewController(group_name: model.name, emails: model.other_users, id: model.id)
 //        let vc = ChatViewController(with: "group", emails: ["email@test.com" : "email"])
         vc.title = model.name
 //        vc.title = "group one"
         vc.navigationItem.largeTitleDisplayMode = .never
-        nav.pushViewController(vc, animated: true)
-        self.view.window?.makeKeyAndVisible()
+        self.navigationController?.pushViewController(vc, animated: true)
+        print("making chat view controller new controller")
+//        spushViewController(vc, animated: true)
+//        self.view.window?.makeKeyAndVisible()
         
     }
     
