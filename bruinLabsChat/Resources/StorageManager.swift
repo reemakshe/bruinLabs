@@ -44,6 +44,7 @@ final class StorageManager {
         let reference = storage.child(path)
         reference.downloadURL { (url, error) in
             guard let url = url, error == nil else {
+                print("cannot get url from storage manager")
                 completion(.failure(StorageErrors.failedToGetDownloadUrl))
                 return
             }

@@ -83,8 +83,8 @@ class ChatViewController: MessagesViewController {
                 self?.messages = messages
                 DispatchQueue.main.async {
                     self?.messagesCollectionView.reloadDataAndKeepOffset()
-                    self?.messagesCollectionView.scrollToBottom()
-
+//                    self?.messagesCollectionView.scrollToBottom(animated: false)
+                    self?.messagesCollectionView.scrollToLastItem()
                 }
             case .failure(let error):
                 print("failed to fetch messages \(error)")
@@ -154,6 +154,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         print("Sending: \(text)")
         
         let message = Message(sender: selfSender, messageId: messageId, sentDate: Date(), kind: .text(text))
+        inputBar.inputTextView.text = ""
         
         if isNewConversation {
             print("in new conversation block")

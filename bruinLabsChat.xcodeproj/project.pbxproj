@@ -10,6 +10,8 @@
 		2A30965190CC20EB3911D224 /* Pods_bruinLabsChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11D38F5A8D51708474BE7C50 /* Pods_bruinLabsChat.framework */; };
 		2D6794E824D6549900CA1FD3 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6794E724D6549900CA1FD3 /* Tools.swift */; };
 		2D6794EA24DA71B400CA1FD3 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6794E924DA71B400CA1FD3 /* ConversationTableViewCell.swift */; };
+		2D6794EC24DCB64100CA1FD3 /* PickGoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6794EB24DCB64000CA1FD3 /* PickGoalsViewController.swift */; };
+		2D6794F224DDE93000CA1FD3 /* UserMatchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6794F124DDE93000CA1FD3 /* UserMatchTableViewCell.swift */; };
 		2D67D1C424D5E7FC003CC7A4 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67D1C324D5E7FC003CC7A4 /* StorageManager.swift */; };
 		2D67D1C624D5EB8F003CC7A4 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67D1C524D5EB8F003CC7A4 /* NewGroupViewController.swift */; };
 		2D67D1C824D5F7C8003CC7A4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67D1C724D5F7C8003CC7A4 /* Extensions.swift */; };
@@ -35,6 +37,8 @@
 		11D38F5A8D51708474BE7C50 /* Pods_bruinLabsChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bruinLabsChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D6794E724D6549900CA1FD3 /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 		2D6794E924DA71B400CA1FD3 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
+		2D6794EB24DCB64000CA1FD3 /* PickGoalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickGoalsViewController.swift; sourceTree = "<group>"; };
+		2D6794F124DDE93000CA1FD3 /* UserMatchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMatchTableViewCell.swift; sourceTree = "<group>"; };
 		2D67D1C324D5E7FC003CC7A4 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		2D67D1C524D5EB8F003CC7A4 /* NewGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewController.swift; sourceTree = "<group>"; };
 		2D67D1C724D5F7C8003CC7A4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -122,6 +126,7 @@
 				2DF4E30024CE4EE6002C2B89 /* ProfileViewController.swift */,
 				2DF4E30724CF78A3002C2B89 /* ChatViewController.swift */,
 				2D67D1C524D5EB8F003CC7A4 /* NewGroupViewController.swift */,
+				2D6794EB24DCB64000CA1FD3 /* PickGoalsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -139,6 +144,7 @@
 				2DF4E2F524CE4DE6002C2B89 /* Storyboards */,
 				2DF4E2E524CE4D38002C2B89 /* Assets.xcassets */,
 				2D6794E924DA71B400CA1FD3 /* ConversationTableViewCell.swift */,
+				2D6794F124DDE93000CA1FD3 /* UserMatchTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -311,11 +317,13 @@
 				2DF4E30824CF78A3002C2B89 /* ChatViewController.swift in Sources */,
 				2D67D1C424D5E7FC003CC7A4 /* StorageManager.swift in Sources */,
 				2DF4E30624CF5317002C2B89 /* DatabaseManager.swift in Sources */,
+				2D6794F224DDE93000CA1FD3 /* UserMatchTableViewCell.swift in Sources */,
 				2DF4E2FF24CE4ED8002C2B89 /* NewConversationViewController.swift in Sources */,
 				2DF4E2E124CE4D34002C2B89 /* ConversationsViewController.swift in Sources */,
 				2D6794EA24DA71B400CA1FD3 /* ConversationTableViewCell.swift in Sources */,
 				2DF4E2FD24CE4EC8002C2B89 /* VideoPlayerViewController.swift in Sources */,
 				2D6794E824D6549900CA1FD3 /* Tools.swift in Sources */,
+				2D6794EC24DCB64100CA1FD3 /* PickGoalsViewController.swift in Sources */,
 				2DF4E2DD24CE4D34002C2B89 /* AppDelegate.swift in Sources */,
 				2DF4E30124CE4EE6002C2B89 /* ProfileViewController.swift in Sources */,
 				2DF4E2DF24CE4D34002C2B89 /* SceneDelegate.swift in Sources */,

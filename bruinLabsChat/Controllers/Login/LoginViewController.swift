@@ -24,7 +24,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.navigationController?.isNavigationBarHidden = true
 //        title = "Log In"
         
         loginButton.layer.cornerRadius = 10.0
@@ -69,7 +69,10 @@ class LoginViewController: UIViewController {
                     UserDefaults.standard.set(email, forKey: "email")
 //                    UserDefaults.standard.set(<#T##value: Any?##Any?#>, forKey: <#T##String#>)
 //                    self.navigationController?.dismiss(animated: true, completion: nil)
-                    self.navigationController?.pushViewController(ConversationsViewController(), animated: true)
+//                    self.navigationController?.pushViewController(ConversationsViewController(), animated: true)
+                    self.navigationController?.dismiss(animated: true, completion: {
+                        print("dismissed login screen")
+                    })
                 }
             }
             
@@ -83,7 +86,8 @@ class LoginViewController: UIViewController {
     
 
     @IBAction func didTapSignUp(_ sender: Any) {
-        let regVC = self.storyboard?.instantiateViewController(withIdentifier: "registerVC") as! RegisterViewController
+//        let regVC = self.storyboard?.instantiateViewController(withIdentifier: "registerVC") as! RegisterViewController
+        let regVC = RegisterViewController()
         navigationController?.pushViewController(regVC, animated: true)
     }
     

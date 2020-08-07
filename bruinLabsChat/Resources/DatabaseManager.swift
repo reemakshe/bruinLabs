@@ -40,8 +40,13 @@ final class DatabaseManager {
     
     public func insertUser(with user: ChatAppUser)
     {
-        database.child("users").child(user.safeEmail).setValue(["username" : user.username, "state" : user.state, "fun_fact" : user.funfact])
+        database.child("users").child(user.safeEmail).child("username").setValue(user.username)
         database.child(user.safeEmail).child("username").setValue(user.username)
+    }
+    
+    
+    public func insertGoals(email: String, goals: [String]) {
+        database.child("users").child(email).child("goals").setValue(goals)
     }
     
     
@@ -68,6 +73,62 @@ final class DatabaseManager {
             completion(.success(results))
             print("fetched user results \(results)")
             print("successfully fetched data")
+        }
+    }
+    
+    public func getAllUsersGoals(completion : @escaping (Result<[[String : Any]], Error>) -> Void) {
+        var results = [[String : Any]]()
+        guard let email = FirebaseAuth.Auth.auth().currentUser?.email else {
+            return
+        }
+        let safeEmail = DatabaseManager.safeEmail(email: email)
+        var currentUserData = [String : Any]()
+        database.child("users").observeSingleEvent(of: .value) { (snapshot) in
+            guard let value = snapshot.value as? [String : [String : Any]] else {
+                completion(.failure(DatabaseErrors.failedToFetch))
+                print("could not get snapshot of goals")
+                return
+            }
+            
+            for (user, data) in value {
+                if user == safeEmail {
+                    currentUserData["username"] = data["username"]
+                    currentUserData["email"] = user
+                    currentUserData["goals"] = data["goals"] as! [String]
+//                    print("current user goals: \(data["goals"])")
+                    continue
+                }
+                let username = data["username"] as! String
+                let goals = data["goals"] as! [String]
+                results.append(["username": username, "email": user, "goals" : goals])
+            }
+            
+            var sortedUsers = [[String : Any]]()
+            let currentUserGoals = currentUserData["goals"] as! [String]
+            for entry in results {
+                let user = entry["email"] as! String
+                let goals = entry["goals"] as! [String]
+                let username = entry["username"]
+                var matchTotal = 0
+                for goal in goals {
+                    if currentUserGoals.contains(goal) {
+                        matchTotal += 1
+                    }
+                }
+                sortedUsers.append(["email" : user, "match" : matchTotal, "goals" : goals, "username" : username])
+            }
+            
+            print("matches before sorting : \(sortedUsers)")
+            
+            sortedUsers.sort {
+                (($0 as! [String : Any])["match"] as! Int) > (($1 as! [String : Any])["match"] as! Int)
+            }
+            
+            print("matches after sorting : \(sortedUsers)")
+//            sortedUsers = sortedUsers.s
+            
+            completion(.success(sortedUsers))
+            print("successfully got all users with goals")
         }
     }
     
@@ -140,7 +201,7 @@ extension DatabaseManager {
             //            "name" : "name"
             ] as [String : Any]
         
-        let ref = database.child(safeEmail)
+        let ref = database.child("\(safeEmail)")
         
         ref.observeSingleEvent(of: .value) { (snapshot) in
             guard var userNode = snapshot.value as? [String : Any] else {
@@ -149,8 +210,11 @@ extension DatabaseManager {
                 return
             }
             
-            if var conversations = userNode as? [[String : Any]] {
+            print("user node snapshot value \(snapshot.value)")
+            
+            if var conversations = userNode["conversations"] as? [[String : Any]] {
                 //conversation exists between users
+                print("conversations already exist")
                 conversations.append(conversationData)
                 userNode["conversations"] = conversations
                 ref.setValue(userNode) { [weak self] (error, _) in
@@ -165,6 +229,7 @@ extension DatabaseManager {
             else {
                 //conversations does not exist between users yet
                 //                self.database.child(safeEmail).child("conversations").setValue([conversationData])
+                print("conversations do not exist for this user")
                 userNode["conversations"] = [conversationData]
                 ref.setValue(userNode) { [weak self] (error, _) in
                     guard error == nil else {
@@ -293,7 +358,7 @@ extension DatabaseManager {
                 return Conversation(id: conversationId, name: name, other_user_email: other_user_email, latest_message: latestMessageObject)
             })
             
-            print(conversations)
+            print("conversatione fetched \(conversations)")
             
             completion(.success(conversations))
             
@@ -407,6 +472,7 @@ extension DatabaseManager {
                 
                 strongSelf.database.child("\(safeEmail)/conversations").observeSingleEvent(of: .value) { (snapshot) in
                     guard var currentUserConversations = snapshot.value as? [[String : Any]] else {
+                        print("unable to get current convos to update latest message")
                         completion(false)
                         return
                     }
@@ -428,11 +494,13 @@ extension DatabaseManager {
                         }
                          position += 1
                     }
+                    print("target conversation before update: \(targetConversation)")
                     targetConversation?["latest_message"] = updatedValue
                     guard let finalConversation = targetConversation else {
                         completion(false)
                         return
                     }
+                    print("updated target conversation: \(finalConversation)")
                     currentUserConversations[position] = finalConversation
                     strongSelf.database.child("\(safeEmail)/conversations").setValue(currentUserConversations) { (error, _) in
                         guard error == nil else {
@@ -512,9 +580,12 @@ struct ChatAppUser {
         
     }
     
-    //    var profilePicUrl : String {
-    //        return "\(safeEmail)_profile_picture.png"
-    //    }
+    let goals : [String]
+//    let profile_pic = "\(safeEmail)_profile_picture.png"
+    
+    var profilePicUrl : String {
+            return "\(safeEmail)_profile_picture.png"
+    }
 }
 
 struct NewGroup {

@@ -30,7 +30,9 @@ class ConversationsViewController: UIViewController {
     
     private let tableView : UITableView = {
         let table = UITableView()
+//        table.backgroundColor = .blue
         table.isHidden = true
+//        table.tintColor
 //        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         table.register(ConversationTableViewCell.self, forCellReuseIdentifier: ConversationTableViewCell.identifier)
         return table
@@ -38,7 +40,7 @@ class ConversationsViewController: UIViewController {
     
     private let noConvsLabel : UILabel = {
         let label = UILabel()
-        label.text = "no groups yet!"
+        label.text = "no chats yet!"
         label.textAlignment = .center
         label.textColor = .gray
         label.font = .systemFont(ofSize: 21, weight: .medium)
@@ -56,7 +58,7 @@ class ConversationsViewController: UIViewController {
         self.view.backgroundColor = .red
         self.view.addSubview(tableView)
         self.view.addSubview(noConvsLabel)
-        self.title = "groups"
+//        self.title = "groups"
         setUpTableView()
         fetchConversations()
         startListeningForConversations()
@@ -71,6 +73,9 @@ class ConversationsViewController: UIViewController {
             switch result {
             case .success(let conversations):
                 guard !conversations.isEmpty else {
+                    print("conversations are empty")
+                    self?.tableView.isHidden = true
+                    self?.noConvsLabel.isHidden = true
                     return
                 }
                 self?.conversations = conversations
@@ -120,13 +125,15 @@ class ConversationsViewController: UIViewController {
     }
     
     @objc private func didTapAddButton() {
-//        let vc = NewGroupViewController()
+        let vc = NewGroupViewController()
 //        let nav = UINavigationController(rootViewController: vc)
 //        present(nav, animated: true)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        self.navigationController?.isNavigationBarHidden = false
         validateAuth()
         
     }
@@ -162,8 +169,18 @@ class ConversationsViewController: UIViewController {
 extension ConversationsViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("convserations count \(conversations.count)")
         return conversations.count
 //        return 1
+    }
+    
+    func orderConversationsBasedOnTime() {
+        var ordered = [Conversation]()
+        
+        for conversation in conversations {
+            //implement some sorting algorithm based on date if there is time
+            //let currConvDate
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -199,7 +216,10 @@ extension ConversationsViewController : UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        if (indexPath.row < conversations.count) {
+            return 120
+        }
+        return 0
     }
 }
 

@@ -17,6 +17,8 @@ class NewConversationViewController: UIViewController {
 //    private var results = [Dictionary<String, Int>.Element]()
     private var users = [[String : String]]()
     private var results = [[String : String]]()
+    private var usersWithGoals = [[String : Any]]()
+    private var resultsWithGoals = [[String : Any]]()
 
 //    private var groups = [String : Any]()
     private var hasFetched = false
@@ -146,6 +148,17 @@ extension NewConversationViewController : UISearchBarDelegate {
                     print("Failed to get groups \(error)")
                 }
             }
+            DatabaseManager.shared.getAllUsersGoals { [weak self] (result) in
+                            switch result {
+                            case .success(let groupsCollection):
+            //                    print("calling filter")
+                                self?.usersWithGoals = groupsCollection
+                                self?.hasFetched = true
+                                self?.filterUsers(query: query)
+                            case .failure(let error):
+                                print("Failed to get groups \(error)")
+                            }
+            }
         }
         
         
@@ -158,7 +171,7 @@ extension NewConversationViewController : UISearchBarDelegate {
         print("not filtered results: \(users)")
         
         var results: [[String : String]] = self.users.filter({
-            guard let name = $0["name"]?.lowercased() else {
+            guard let name = $0["name"]?.lowercased(), $0["email"] != safeEmail else {
                 return false
             }
             
@@ -166,6 +179,10 @@ extension NewConversationViewController : UISearchBarDelegate {
             
             return name.hasPrefix(query.lowercased())
         })
+        
+//        var resultsWithGoals: [[String : Any]] = self.usersWithGoals.filter({
+//            guard var name = $0["name"] as? String, name = name.lowercased(),
+//        })
         
         print("filtered results: \(results)")
         self.results = results
