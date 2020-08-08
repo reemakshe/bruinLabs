@@ -8,6 +8,7 @@
 
 import UIKit
 import FirebaseAuth
+import Firebase
 import JGProgressHUD
 
 struct Conversation {
@@ -35,6 +36,7 @@ class ConversationsViewController: UIViewController {
 //        table.tintColor
 //        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         table.register(ConversationTableViewCell.self, forCellReuseIdentifier: ConversationTableViewCell.identifier)
+//        table.backgroundColor = UIColor(displayP3Red: 0.87058823, green: 0.956862, blue: 0.992156, alpha: 1)
         return table
     }()
     
@@ -55,29 +57,46 @@ class ConversationsViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(didTapComposeButton))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAddButton))
-        self.view.backgroundColor = .red
+//        self.view.backgroundColor = .red
+        self.navigationController?.isToolbarHidden = true
+        self.view.backgroundColor = .white
         self.view.addSubview(tableView)
         self.view.addSubview(noConvsLabel)
+        tableView.isHidden = true
+        noConvsLabel.isHidden = false
 //        self.title = "groups"
         setUpTableView()
-        fetchConversations()
+//        fetchConversations()
         startListeningForConversations()
     }
     
     private func startListeningForConversations() {
-        if FirebaseAuth.Auth.auth().currentUser == nil {
+        print("listening for conversations")
+//        let handle = Auth.auth().addStateDidChangeListener(<#T##listener: AuthStateDidChangeListenerBlock##AuthStateDidChangeListenerBlock##(Auth, User?) -> Void#>)
+        print(FirebaseAuth.Auth.auth().currentUser)
+//        if FirebaseAuth.Auth.auth().currentUser == nil {
+//            print("current user is nil??")
+//            return
+//        }
+        
+        print(UserDefaults.standard.value(forKey: "email") as? String)
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("no current user email")
             return
         }
-        let safeEmail = DatabaseManager.safeEmail(email: (FirebaseAuth.Auth.auth().currentUser?.email)!)
+        let safeEmail = DatabaseManager.safeEmail(email: email)
+        print("user email: \(safeEmail)")
         DatabaseManager.shared.getAllConversations(for: safeEmail) { [weak self ](result) in
             switch result {
             case .success(let conversations):
                 guard !conversations.isEmpty else {
                     print("conversations are empty")
                     self?.tableView.isHidden = true
-                    self?.noConvsLabel.isHidden = true
+                    self?.noConvsLabel.isHidden = false
                     return
                 }
+                self?.noConvsLabel.isHidden = true
+                self?.tableView.isHidden = false
                 self?.conversations = conversations
                 
                 DispatchQueue.main.async {
@@ -85,7 +104,9 @@ class ConversationsViewController: UIViewController {
                 }
                 
             case .failure(let error):
-                print("failed to get convos: \(error)")
+                print("failed to get convos or no convos to get: \(error)")
+                self?.tableView.isHidden = true
+                self?.noConvsLabel.isHidden = false
             }
         }
     }
@@ -94,7 +115,25 @@ class ConversationsViewController: UIViewController {
         let vc = NewConversationViewController()
         vc.completion = {[weak self] result in
             print("\(result)")
-            self?.createNewConversation(result: result)
+            guard let strongSelf = self else {
+                return
+            }
+            let currentConversations = strongSelf.conversations
+            
+            if let targetConversation = currentConversations.first(where: {
+                $0.other_user_email == DatabaseManager.safeEmail(email: result["email"]!)
+            }) {
+                
+                let vc = ChatViewController(otherUser: targetConversation.other_user_email, id: targetConversation.id)
+                vc.isNewConversation = false
+                vc.title = targetConversation.name
+                vc.navigationItem.largeTitleDisplayMode = .never
+                strongSelf.navigationController?.pushViewController(vc, animated: true)
+                
+            }
+            else {
+                strongSelf.createNewConversation(result: result)
+            }
         }
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
@@ -135,12 +174,14 @@ class ConversationsViewController: UIViewController {
         super.viewDidAppear(animated)
         self.navigationController?.isNavigationBarHidden = false
         validateAuth()
-        
+
+//        startListeningForConversations()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
+        noConvsLabel.frame = view.bounds
     }
     
     private func validateAuth() {
@@ -158,10 +199,7 @@ class ConversationsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
     }
-    
-    private func fetchConversations() {
-        tableView.isHidden = false
-    }
+
 
 
 }
@@ -196,23 +234,16 @@ extension ConversationsViewController : UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let model = conversations[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
-//        navigationController = UINavigationController(rootViewController: ConversationsViewController())
-//        print(navigationController.debugDescription)
-//        let nav = UINavigationController(rootViewController: ConversationsViewController())
-//        print(navigationController.debugDescription)
-
-//        self.view.window?.rootViewController = nav
+        openConversation(model: model)
+        print("making chat view controller new controller")
+        
+    }
+    
+    func openConversation(model : Conversation) {
         let vc = ChatViewController(otherUser: model.other_user_email, id: model.id)
-//        let vc = ChatViewController(group_name: model.name, emails: model.other_users, id: model.id)
-//        let vc = ChatViewController(with: "group", emails: ["email@test.com" : "email"])
         vc.title = model.name
-//        vc.title = "group one"
         vc.navigationItem.largeTitleDisplayMode = .never
         self.navigationController?.pushViewController(vc, animated: true)
-        print("making chat view controller new controller")
-//        spushViewController(vc, animated: true)
-//        self.view.window?.makeKeyAndVisible()
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

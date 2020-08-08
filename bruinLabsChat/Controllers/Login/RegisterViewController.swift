@@ -129,6 +129,7 @@ class RegisterViewController: UIViewController {
     private let imageView: UIImageView = {
          let imageView = UIImageView()
          imageView.image = UIImage(systemName: "heart.circle")
+//        imageView.image = UIImage(named: "heartIcon")
         let randomR = Float.random(in: 0.5..<1)
         let randomG = Float.random(in: 0.5..<1)
         let randomB = Float.random(in: 0.5..<1)
@@ -289,7 +290,9 @@ class RegisterViewController: UIViewController {
             let username = usernameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-
+//
+//            UserDefaults.standard.set(username, forKey: "username")
+//            UserDefaults.standard.set(email, forKey: "email")
             
             DatabaseManager.shared.userExists(with: email) { (exists) in
                 if exists {
@@ -326,6 +329,9 @@ class RegisterViewController: UIViewController {
                     }
                     
                     let safeEmail = DatabaseManager.safeEmail(email: email)
+                    
+                    UserDefaults.standard.set(email, forKey: "email")
+                    UserDefaults.standard.set(username, forKey: "username")
                     
                     let fileName = "\(safeEmail)_profile_picture.png"
                     StorageManager.shared.uploadProfilePicture(with: data, filename: fileName) { (result) in

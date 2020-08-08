@@ -25,14 +25,15 @@ class NewConversationViewController: UIViewController {
     
     private let searchBar : UISearchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = "find a new group..."
+        searchBar.placeholder = "find a new friend..."
         return searchBar
     }()
     
     private let tableView: UITableView = {
         let table = UITableView()
         table.isHidden = true
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        table.rowHeight = 120
+        table.register(UserMatchTableViewCell.self, forCellReuseIdentifier: UserMatchTableViewCell.identifier)
         return table
     }()
     
@@ -87,9 +88,13 @@ extension NewConversationViewController : UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("putting thing in table view")
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel!.text = results[indexPath.row]["name"]
-        print(results[indexPath.row]["name"])
+//        let cell = tableView.dequeueReusableCell(withIdentifier: UserMatchTableViewCell.identifier, for: indexPath)
+//        cell.textLabel!.text = results[indexPath.row]["name"]
+        let result = results[indexPath.row]
+        let user = ChatAppUser(username: result["name"] as! String, email: result["email"] as! String, goals: [""])
+        let cell = tableView.dequeueReusableCell(withIdentifier: UserMatchTableViewCell.identifier, for: indexPath) as! UserMatchTableViewCell
+        cell.configure(user: user)
+//        print(results[indexPath.row]["name"])
         return cell
     }
     
@@ -99,6 +104,10 @@ extension NewConversationViewController : UITableViewDelegate, UITableViewDataSo
         dismiss(animated: true) { [weak self] in
             self?.completion?(targetUserData)
         }
+        
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+           return 120
+       }
         //start conversation
 //        let name = results[indexPath.row]["name"]
 ////        let groupMembers = Array((groups[groupName])!["members"]?.keys)

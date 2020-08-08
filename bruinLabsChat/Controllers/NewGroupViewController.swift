@@ -320,8 +320,10 @@ class NewGroupViewController: UIViewController {
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(didTapComposeButton))
 //        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAddButton))
 //        self.view.backgroundColor = .red
+        self.title = "matches"
         self.view.addSubview(tableView)
         self.view.addSubview(noConvsLabel)
+//        tableView.backgroundColor = UIColor(displayP3Red: 0.85882, green: 0.92941, blue: 0.964705, alpha: 1)
         tableView.isHidden = false
 //        self.title = "groups"
         setUpTableView()
@@ -346,7 +348,7 @@ class NewGroupViewController: UIViewController {
                      self?.matches.append(user)
                  }
                 DispatchQueue.main.async {
-                                   self?.tableView.reloadData()
+                    self?.tableView.reloadData()
                 }
                 
             }

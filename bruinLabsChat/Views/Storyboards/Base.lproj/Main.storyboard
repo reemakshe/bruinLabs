@@ -11,7 +11,7 @@
         <scene sceneID="moF-jF-fmk">
             <objects>
                 <navigationController id="bvU-0Z-g40" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="profile" id="6KZ-0w-tws"/>
+                    <tabBarItem key="tabBarItem" title="profile" image="person.circle" catalog="system" selectedImage="person.circle" id="6KZ-0w-tws"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="vV3-Nn-WD9">
                         <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -32,28 +32,75 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="YL5-NJ-f7P">
-                                <rect key="frame" x="0.0" y="140" width="414" height="673"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                            </tableView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MIW-5H-MFk">
+                                <rect key="frame" x="132" y="140" width="150" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="8pe-1j-2DJ"/>
+                                    <constraint firstAttribute="height" constant="150" id="Mzo-ev-owg"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PTk-2z-omx">
+                                <rect key="frame" x="35" y="365" width="129" height="34.5"/>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="25"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username_text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SFt-w0-VdC">
+                                <rect key="frame" x="189" y="370" width="131.5" height="27.5"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="email:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rMZ-1u-tjS">
+                                <rect key="frame" x="35" y="449.5" width="70" height="34.5"/>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="25"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxc-Um-fMv">
+                                <rect key="frame" x="158.5" y="735" width="97" height="53"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="30"/>
+                                <state key="normal" title="log out">
+                                    <color key="titleColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="logOutButtonTapped:" destination="tXN-TW-dO1" eventType="touchUpInside" id="8rA-g8-VlS"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="email_text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iEj-if-WNS">
+                                <rect key="frame" x="189" y="454.5" width="92.5" height="27.5"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" red="0.89178383077189938" green="0.94316272274439139" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
-                            <constraint firstItem="YL5-NJ-f7P" firstAttribute="top" secondItem="seD-jY-Vxo" secondAttribute="top" id="FjE-Fj-JsC"/>
-                            <constraint firstItem="YL5-NJ-f7P" firstAttribute="leading" secondItem="seD-jY-Vxo" secondAttribute="leading" id="Guk-Tf-m7C"/>
-                            <constraint firstItem="seD-jY-Vxo" firstAttribute="trailing" secondItem="YL5-NJ-f7P" secondAttribute="trailing" id="hjc-VI-0bs"/>
-                            <constraint firstItem="seD-jY-Vxo" firstAttribute="bottom" secondItem="YL5-NJ-f7P" secondAttribute="bottom" id="peI-yA-Hbr"/>
+                            <constraint firstItem="seD-jY-Vxo" firstAttribute="bottom" secondItem="bxc-Um-fMv" secondAttribute="bottom" constant="25" id="8U7-3m-f3U"/>
+                            <constraint firstItem="iEj-if-WNS" firstAttribute="top" secondItem="rMZ-1u-tjS" secondAttribute="top" constant="5" id="CKm-zz-gf6"/>
+                            <constraint firstItem="iEj-if-WNS" firstAttribute="leading" secondItem="SFt-w0-VdC" secondAttribute="leading" id="HdX-ds-H16"/>
+                            <constraint firstItem="SFt-w0-VdC" firstAttribute="top" secondItem="PTk-2z-omx" secondAttribute="top" constant="5" id="Hny-He-q9l"/>
+                            <constraint firstItem="PTk-2z-omx" firstAttribute="leading" secondItem="seD-jY-Vxo" secondAttribute="leading" constant="35" id="HzJ-zQ-CUp"/>
+                            <constraint firstItem="rMZ-1u-tjS" firstAttribute="leading" secondItem="seD-jY-Vxo" secondAttribute="leading" constant="35" id="cST-by-PeA"/>
+                            <constraint firstItem="SFt-w0-VdC" firstAttribute="leading" secondItem="PTk-2z-omx" secondAttribute="trailing" constant="25" id="gnn-ja-HWp"/>
+                            <constraint firstItem="PTk-2z-omx" firstAttribute="top" secondItem="MIW-5H-MFk" secondAttribute="bottom" constant="75" id="j6c-pG-8bK"/>
+                            <constraint firstItem="MIW-5H-MFk" firstAttribute="centerX" secondItem="xcH-kb-kRf" secondAttribute="centerX" id="lCL-px-7N1"/>
+                            <constraint firstItem="bxc-Um-fMv" firstAttribute="centerX" secondItem="xcH-kb-kRf" secondAttribute="centerX" id="lpo-6N-t8t"/>
+                            <constraint firstItem="rMZ-1u-tjS" firstAttribute="top" secondItem="PTk-2z-omx" secondAttribute="bottom" constant="50" id="m0I-Fq-eR0"/>
+                            <constraint firstItem="MIW-5H-MFk" firstAttribute="top" secondItem="seD-jY-Vxo" secondAttribute="top" id="whx-tB-jeo"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="seD-jY-Vxo"/>
                     </view>
                     <navigationItem key="navigationItem" title="profile" id="BlH-xi-Vb5"/>
                     <connections>
-                        <outlet property="tableView" destination="YL5-NJ-f7P" id="85S-lv-zFz"/>
+                        <outlet property="emailTextLabel" destination="iEj-if-WNS" id="y02-oV-1ro"/>
+                        <outlet property="profileImageView" destination="MIW-5H-MFk" id="DpR-c6-YWq"/>
+                        <outlet property="usernameTextLabel" destination="SFt-w0-VdC" id="l6q-mm-Ltf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lZ9-an-p0G" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1607" y="1608"/>
+            <point key="canvasLocation" x="1605.7971014492755" y="1607.8125"/>
         </scene>
         <!--Pick Goals View Controller-->
         <scene sceneID="CgG-oO-FZz">
@@ -285,8 +332,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="reddit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T01-Np-aJs">
-                                <rect key="frame" x="127" y="64" width="160.5" height="68.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="circle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T01-Np-aJs">
+                                <rect key="frame" x="137.5" y="64" width="139.5" height="68.5"/>
                                 <fontDescription key="fontDescription" name="AvenirNext-Heavy" family="Avenir Next" pointSize="50"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -308,7 +355,7 @@
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VAW-eB-xja">
                                         <rect key="frame" x="0.0" y="90" width="352" height="55"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                 </subviews>
                                 <constraints>
@@ -406,12 +453,13 @@
         <!--Tab Bar Controller-->
         <scene sceneID="xyE-b2-cVM">
             <objects>
-                <tabBarController id="GA2-LF-I7s" sceneMemberID="viewController">
-                    <tabBar key="tabBar" clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionIndicatorImage="star" catalog="system" id="QGJ-jb-RZU">
+                <tabBarController storyboardIdentifier="tabVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="GA2-LF-I7s" sceneMemberID="viewController">
+                    <tabBar key="tabBar" clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="QGJ-jb-RZU">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="tintColor" red="0.088163860979999994" green="0.48126125069999998" blue="0.67474902849999996" alpha="0.74204995600000001" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="barTintColor" red="0.89178383080000001" green="0.94316272270000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <color key="selectedImageTintColor" red="0.088163860979999994" green="0.48126125069999998" blue="0.67474902849999996" alpha="0.74204995600000001" colorSpace="custom" customColorSpace="displayP3"/>
                     </tabBar>
                     <connections>
@@ -427,7 +475,7 @@
         <scene sceneID="SwD-QV-uy2">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AIi-1q-GiY" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="chats" id="QKG-Jb-0JM"/>
+                    <tabBarItem key="tabBarItem" title="chats" image="message" catalog="system" selectedImage="message" id="QKG-Jb-0JM"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="dnz-Yt-ssh">
                         <rect key="frame" x="0.0" y="44" width="414" height="100"/>
@@ -448,6 +496,7 @@
     </scenes>
     <resources>
         <image name="logo" width="478" height="500"/>
-        <image name="star" catalog="system" width="128" height="116"/>
+        <image name="message" catalog="system" width="128" height="113"/>
+        <image name="person.circle" catalog="system" width="128" height="121"/>
     </resources>
 </document>

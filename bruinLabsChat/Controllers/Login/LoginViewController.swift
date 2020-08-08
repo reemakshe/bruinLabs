@@ -67,12 +67,22 @@ class LoginViewController: UIViewController {
                 else {
 //                    let user = result!.user
                     UserDefaults.standard.set(email, forKey: "email")
-//                    UserDefaults.standard.set(<#T##value: Any?##Any?#>, forKey: <#T##String#>)
+                    let safeEmail = DatabaseManager.safeEmail(email: email)
+                    let username = DatabaseManager.shared.getUsername(email: safeEmail)
+                    UserDefaults.standard.set(username, forKey: "username")
+                    print("user defaults: \(email), \(username)")
 //                    self.navigationController?.dismiss(animated: true, completion: nil)
 //                    self.navigationController?.pushViewController(ConversationsViewController(), animated: true)
-                    self.navigationController?.dismiss(animated: true, completion: {
-                        print("dismissed login screen")
-                    })
+//                    self.navigationController?.dismiss(animated: true, completion: {
+//                        print("dismissed login screen")
+//                    })
+//                    self.navigationController?.popToRootViewController(animated: false)
+//                    self.navigationController?.pushViewController(ConversationsViewController(), animated: true)
+                    let convVC = self.storyboard?.instantiateViewController(withIdentifier: "tabVC") as! UITabBarController
+                    let nav = UINavigationController(rootViewController: convVC)
+                    nav.modalPresentationStyle = .fullScreen
+                    self.present(nav, animated: true)
+                    
                 }
             }
             

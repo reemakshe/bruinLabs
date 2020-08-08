@@ -37,10 +37,14 @@ class PickGoalsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+//
+//        firstGoalButton.layer.cornerRadius = 10.0
+//        secondGoalButton.layer.cornerRadius = 10.0
+//        thirdGoalButton.layer.cornerRadius = 10.0
+        firstGoalButton.titleLabel?.textAlignment = .center
+        secondGoalButton.titleLabel?.textAlignment = .center
+        thirdGoalButton.titleLabel?.textAlignment = .center
 
-        firstGoalButton.layer.cornerRadius = 10.0
-        secondGoalButton.layer.cornerRadius = 10.0
-        thirdGoalButton.layer.cornerRadius = 10.0
         doneButton.layer.cornerRadius = 10.0
         
         firstGoalButton.titleLabel?.adjustsFontSizeToFitWidth = true
@@ -96,7 +100,11 @@ class PickGoalsViewController: UIViewController {
         let safeEmail = DatabaseManager.safeEmail(email: email)
         DatabaseManager.shared.insertGoals(email: safeEmail, goals: goals)
 //        self.navigationController?.pushViewController(ConversationsViewController(), animated: true)
-        self.dismiss(animated: true, completion: nil)
+//        self.dismiss(animated: true, completion: nil)
+        let convVC = self.storyboard?.instantiateViewController(withIdentifier: "tabVC") as! UITabBarController
+        let nav = UINavigationController(rootViewController: convVC)
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: true)
     }
     
 

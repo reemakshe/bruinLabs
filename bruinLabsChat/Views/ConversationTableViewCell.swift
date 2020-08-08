@@ -16,7 +16,7 @@ class ConversationTableViewCell: UITableViewCell {
     private let userImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 30
+        imageView.layer.cornerRadius = 50
         imageView.layer.masksToBounds = true
         return imageView
     }()
@@ -39,7 +39,7 @@ class ConversationTableViewCell: UITableViewCell {
         contentView.addSubview(userNameLabel)
         contentView.addSubview(userImageView)
         contentView.addSubview(userMessageLabel)
-        contentView.backgroundColor = UIColor(displayP3Red: 0.717, green: 0.863, blue: 0.949, alpha: 0.5)
+//        contentView.backgroundColor = UIColor(displayP3Red: 0.85882, green: 0.92941, blue: 0.964705, alpha: 1)
     }
     
     override func layoutSubviews() {

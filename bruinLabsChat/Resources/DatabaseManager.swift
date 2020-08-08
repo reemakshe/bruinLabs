@@ -146,6 +146,7 @@ extension DatabaseManager {
         }
         
         let safeEmail = DatabaseManager.safeEmail(email: currentEmail)
+        let currentUsername = UserDefaults.standard.value(forKey: "username")
         
         let messageDate = firstMessage.sentDate
         let dateString = ChatViewController.dateFormatter.string(from: messageDate)
@@ -179,8 +180,8 @@ extension DatabaseManager {
         
         var conversationData = [
             "id" : "conversation_\(firstMessage.messageId)",
-            "recipient_id" : otherUserEmail,
-            "recipient_name" : otherUserName,
+            "other_id" : otherUserEmail,
+            "other_name" : otherUserName,
             "latest_message" : [
                 "date" : dateString,
                 "is_read" : false,
@@ -191,8 +192,8 @@ extension DatabaseManager {
         
         var recipientConversationData = [
             "id" : "conversation_\(firstMessage.messageId)",
-            "recipient_id" : otherUserEmail,
-            "recipient_name" : otherUserName,
+            "other_id" : safeEmail,
+            "other_name" : currentUsername,
             "latest_message" : [
                 "date" : dateString,
                 "is_read" : false,
@@ -293,7 +294,7 @@ extension DatabaseManager {
             "content" : message_content,
             "date" : dateString,
             "sender_email" : currentUserEmail,
-            "recipient_name" : otherUserName,
+            "other_name" : otherUserName,
             "is_read": false
             ] as [String : Any]
         let value = [
@@ -341,11 +342,11 @@ extension DatabaseManager {
                     print("unable to make message content")
                     return nil
                 }
-                guard let other_user_email = dictionary["recipient_id"] as? String else {
+                guard let other_user_email = dictionary["other_id"] as? String else {
                     print("unable to make other_user_enai")
                     return nil
                 }
-                guard let name = dictionary["recipient_name"] as? String else {
+                guard let name = dictionary["other_name"] as? String else {
                         print("not able to make into compact map")
                         return nil
                 }
@@ -379,7 +380,7 @@ extension DatabaseManager {
                 
                 print(dictionary)
                 guard let email = dictionary["sender_email"] as? String,
-                    let name = dictionary["recipient_name"] as? String,
+                    let name = dictionary["other_name"] as? String,
                     let is_read = dictionary["is_read"] as? Bool,
                     let messageId = dictionary["id"] as? String,
                     let content = dictionary["content"] as? String,
@@ -458,7 +459,7 @@ extension DatabaseManager {
                 "content" : message_content,
                 "date" : dateString,
                 "sender_email" : currentUserEmail,
-                "recipient_name" : strongSelf.getUsername(email: otherUserEmail),
+                "other_name" : strongSelf.getUsername(email: otherUserEmail),
                 "is_read": false
                 ] as [String : Any]
             
@@ -554,12 +555,29 @@ extension DatabaseManager {
         
     }
     
+    
     public func getUsername(email: String) -> String {
         print("getting username")
         var value = ""
-        database.child(email).child("username").observe(.value) { (snapshot) in
+//        database.child(email).child("username").observe(.value) { (snapshot) in
+//            if snapshot.exists() {
+//                value = snapshot.value as! String
+//            }
+//            else {
+//                print("username snapshot: \(snapshot.value)")
+//                print("failed to get username")
+//            }
+//        }
+        
+        database.child(email).child("username").observeSingleEvent(of: .value) { (snapshot) in
             if snapshot.exists() {
+                print("value exists \(snapshot.value)")
                 value = snapshot.value as! String
+                print("value as string: \(value)")
+            }
+            else {
+                print("username snapshot: \(snapshot.value)")
+                print("failed to get username")
             }
         }
         return value

@@ -50,11 +50,14 @@ class ChatViewController: MessagesViewController {
     public var isNewConversation = false
     public let otherUserEmail : String
     
+    private var currentUserProfileUrl : URL?
+    private var otherUserProfileUrl : URL?
+    
 //    public var otherMembers : [String : String]
     
 //    public var group : String
     
-    let conversationid : String?
+    var conversationid : String?
 
     private var messages = [Message]()
 
@@ -130,6 +133,58 @@ class ChatViewController: MessagesViewController {
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
         return isFromCurrentSender(message: message) ? UIColor(displayP3Red: 0.5058, green: 0.7569, blue: 0.7569, alpha: 1) : UIColor(displayP3Red: 0.835, green: 0.835, blue: 0.835, alpha: 1)
     }
+    
+    func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        let sender = message.sender
+        
+        if sender.senderId == selfSender?.senderId {
+            //show our image
+            if let currentUserImage = self.currentUserProfileUrl {
+                avatarView.sd_setImage(with: currentUserImage, completed: nil)
+            }
+            else {
+                //fetch url
+                guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+                    return
+                }
+                let safeEmail = DatabaseManager.safeEmail(email: email)
+                let path = "images/\(safeEmail)_profile_picture.png"
+                StorageManager.shared.downloadURL(for: path) { [weak self] (result) in
+                    switch result {
+                    case .success(let url):
+                        DispatchQueue.main.async {
+                            avatarView.sd_setImage(with: url, completed: nil)
+                        }
+                        self?.currentUserProfileUrl = url
+                    case .failure(let error):
+                        print("failed to fetch url \(error)")
+                    }
+                }
+            }
+        }
+        else {
+            //show other image
+            if let otherUserImage = self.otherUserProfileUrl {
+                avatarView.sd_setImage(with: otherUserImage, completed: nil)
+            }
+            else {
+                //fetch url
+
+                let path = "images/\(otherUserEmail)_profile_picture.png"
+                StorageManager.shared.downloadURL(for: path) { [weak self] (result) in
+                    switch result {
+                    case .success(let url):
+                        DispatchQueue.main.async {
+                            avatarView.sd_setImage(with: url, completed: nil)
+                        }
+                        self?.otherUserProfileUrl = url
+                    case .failure(let error):
+                        print("failed to fetch url \(error)")
+                    }
+                }
+            }
+        }
+    }
 
 
 }
@@ -162,6 +217,10 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                 if success {
                     print("Message sent")
                     self?.isNewConversation = false
+                    
+                    let newConversationId = "conversation_\(message.messageId)"
+                    self?.conversationid = newConversationId
+                    self?.listenForMessages(id: newConversationId)
                 }
                 else {
                     print("message failed to send")
@@ -179,9 +238,14 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         
         else {
             print("in existing conversation block")
-            DatabaseManager.shared.sendMessage(otherUserEmail: otherUserEmail, conversationId: self.conversationid!, message: message) { (success) in
+            DatabaseManager.shared.sendMessage(otherUserEmail: otherUserEmail, conversationId: self.conversationid!, message: message) { [weak self] (success) in
                 if success {
                     print("Message sent")
+                    DispatchQueue.main.async {
+                        self?.messagesCollectionView.reloadDataAndKeepOffset()
+                        //                    self?.messagesCollectionView.scrollToBottom(animated: false)
+                        self?.messagesCollectionView.scrollToLastItem()
+                    }
                 }
                 else {
                     print("message failed to send")
