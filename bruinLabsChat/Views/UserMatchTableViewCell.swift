@@ -23,13 +23,13 @@ class UserMatchTableViewCell: UITableViewCell {
     
     private let userNameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 21, weight: .semibold)
+        label.font = UIFont(name: "Avenir-Heavy", size: 20)
         return label
     }()
     
     private let userGoalsLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 19, weight: .regular)
+        label.font = UIFont(name: "Avenir-Heavy", size: 17)
         label.numberOfLines = 0
         label.textColor = .darkGray
         return label

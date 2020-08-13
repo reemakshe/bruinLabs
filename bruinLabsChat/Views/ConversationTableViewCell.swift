@@ -23,14 +23,17 @@ class ConversationTableViewCell: UITableViewCell {
 
     private let userNameLabel: UILabel = {
        let label = UILabel()
-        label.font = .systemFont(ofSize: 21, weight: .semibold)
+//        label.font = .systemFont(ofSize: 21, weight: .semibold)
+        label.font = UIFont(name: "Avenir-Heavy", size: 24)
         return label
     }()
     
     private let userMessageLabel: UILabel = {
        let label = UILabel()
-        label.font = .systemFont(ofSize: 19, weight: .regular)
+//        label.font = .systemFont(ofSize: 19, weight: .regular)
+        label.font = UIFont(name: "Avenir-Heavy", size: 20)
         label.numberOfLines = 0
+        label.textColor = .darkGray
         return label
     }()
     

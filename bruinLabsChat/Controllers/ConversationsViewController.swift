@@ -164,7 +164,7 @@ class ConversationsViewController: UIViewController {
     }
     
     @objc private func didTapAddButton() {
-        let vc = NewGroupViewController()
+        let vc = MatchesViewController()
 //        let nav = UINavigationController(rootViewController: vc)
 //        present(nav, animated: true)
         self.navigationController?.pushViewController(vc, animated: true)

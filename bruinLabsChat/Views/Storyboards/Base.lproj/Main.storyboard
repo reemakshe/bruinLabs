@@ -22,7 +22,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KBC-oc-RAf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1333" y="875"/>
+            <point key="canvasLocation" x="2242.0289855072465" y="874.55357142857144"/>
         </scene>
         <!--profile-->
         <scene sceneID="GJD-jd-mIR">
@@ -74,7 +74,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.89178383077189938" green="0.94316272274439139" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="seD-jY-Vxo" firstAttribute="bottom" secondItem="bxc-Um-fMv" secondAttribute="bottom" constant="25" id="8U7-3m-f3U"/>
                             <constraint firstItem="iEj-if-WNS" firstAttribute="top" secondItem="rMZ-1u-tjS" secondAttribute="top" constant="5" id="CKm-zz-gf6"/>
@@ -100,7 +100,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lZ9-an-p0G" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1605.7971014492755" y="1607.8125"/>
+            <point key="canvasLocation" x="2515.9420289855075" y="1607.8125"/>
         </scene>
         <!--Pick Goals View Controller-->
         <scene sceneID="CgG-oO-FZz">
@@ -197,7 +197,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IPP-sq-phW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3424.6376811594205" y="1557.5892857142856"/>
+            <point key="canvasLocation" x="4334.7826086956529" y="1557.5892857142856"/>
         </scene>
         <!--Register View Controller-->
         <scene sceneID="Yb0-2l-h4f">
@@ -298,7 +298,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sxF-IV-ghX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3657.971014492754" y="668.97321428571422"/>
+            <point key="canvasLocation" x="4568.115942028986" y="668.97321428571422"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="M0n-hD-45Q">
@@ -410,6 +410,22 @@
             </objects>
             <point key="canvasLocation" x="3659.420289855073" y="-51.5625"/>
         </scene>
+        <!--tips-->
+        <scene sceneID="Mia-NA-u2g">
+            <objects>
+                <viewController title="tips" id="b0A-tt-0qm" customClass="TipsViewController" customModule="bruinLabsChat" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="AAf-HO-hNC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="YHL-PQ-0ZN"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="tips" id="ZBo-al-Qoo"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UEC-9M-5aD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1001.4492753623189" y="1607.8125"/>
+        </scene>
         <!--chats-->
         <scene sceneID="3yc-uU-uSB">
             <objects>
@@ -424,7 +440,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LBH-h4-1L9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-180" y="1608"/>
+            <point key="canvasLocation" x="728.98550724637687" y="1607.8125"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="xyE-b2-cVM">
@@ -440,6 +456,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="AIi-1q-GiY" kind="relationship" relationship="viewControllers" id="F7V-Ef-JcQ"/>
+                        <segue destination="hFf-RU-wdH" kind="relationship" relationship="viewControllers" id="8UH-r1-Vtx"/>
                         <segue destination="bvU-0Z-g40" kind="relationship" relationship="viewControllers" id="Wdj-1j-LEP"/>
                     </connections>
                 </tabBarController>
@@ -467,10 +484,29 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hHp-r2-WXF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-39" y="856"/>
+            <point key="canvasLocation" x="871.01449275362324" y="855.80357142857144"/>
+        </scene>
+        <!--tips-->
+        <scene sceneID="Bxg-Bs-7Jr">
+            <objects>
+                <navigationController title="tips" automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="hFf-RU-wdH" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="tips" image="lightbulb" catalog="system" id="ZOd-91-HWr"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="jS7-ub-Gwp">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="b0A-tt-0qm" kind="relationship" relationship="rootViewController" id="0iJ-w7-s3L"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OWL-FE-QrL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-323" y="856"/>
         </scene>
     </scenes>
     <resources>
+        <image name="lightbulb" catalog="system" width="113" height="128"/>
         <image name="logo" width="478" height="500"/>
         <image name="message" catalog="system" width="128" height="113"/>
         <image name="person.circle" catalog="system" width="128" height="121"/>

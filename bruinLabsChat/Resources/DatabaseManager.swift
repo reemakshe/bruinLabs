@@ -602,6 +602,45 @@ extension DatabaseManager {
     
 }
 
+extension DatabaseManager {
+    public func insertTip(tip : String) {
+        database.child("tips").observeSingleEvent(of: .value) { [weak self] (snapshot) in
+            if (snapshot.exists()) {
+                //tips node already exists
+                guard var tips = snapshot.value as? [String] else {
+                    print("could not make tips in array")
+                    return
+                }
+                
+                tips.append(tip)
+                self?.database.child("tips").setValue(tips)
+            }
+            
+            else {
+                let tips = [tip]
+                self?.database.child("tips").setValue(tips)
+            }
+        }
+    }
+    
+    public func getTips(completion : @escaping (Result<[String], Error>) -> Void) {
+        database.child("tips").observe(.value) { (snapshot) in
+            guard snapshot.exists() else {
+                print("snapshot doesn't exist")
+                completion(.failure(DatabaseErrors.failedToFetch))
+                return
+            }
+            guard let tips = snapshot.value as? [String] else {
+                print("failed to get tips from database")
+                completion(.failure(DatabaseErrors.failedToFetch))
+                return
+            }
+            
+            completion(.success(tips))
+        }
+    }
+}
+
 struct ChatAppUser {
     let username: String
     let email: String

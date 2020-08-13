@@ -98,15 +98,6 @@
 //}
 
 
-
-//
-//  NewGroupViewController.swift
-//  bruinLabsChat
-//
-//  Created by Reema Kshetramade on 8/1/20.
-//  Copyright © 2020 Reema Kshetramade. All rights reserved.
-//
-
 import UIKit
 import FirebaseAuth
 

@@ -12,8 +12,10 @@
 		2D6794EA24DA71B400CA1FD3 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6794E924DA71B400CA1FD3 /* ConversationTableViewCell.swift */; };
 		2D6794EC24DCB64100CA1FD3 /* PickGoalsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6794EB24DCB64000CA1FD3 /* PickGoalsViewController.swift */; };
 		2D6794F224DDE93000CA1FD3 /* UserMatchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6794F124DDE93000CA1FD3 /* UserMatchTableViewCell.swift */; };
+		2D67953B24E4F78B00CA1FD3 /* TipsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67953A24E4F78A00CA1FD3 /* TipsViewController.swift */; };
+		2D67953D24E4FB5900CA1FD3 /* TipsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67953C24E4FB5900CA1FD3 /* TipsTableViewCell.swift */; };
 		2D67D1C424D5E7FC003CC7A4 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67D1C324D5E7FC003CC7A4 /* StorageManager.swift */; };
-		2D67D1C624D5EB8F003CC7A4 /* NewGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67D1C524D5EB8F003CC7A4 /* NewGroupViewController.swift */; };
+		2D67D1C624D5EB8F003CC7A4 /* MatchesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67D1C524D5EB8F003CC7A4 /* MatchesViewController.swift */; };
 		2D67D1C824D5F7C8003CC7A4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67D1C724D5F7C8003CC7A4 /* Extensions.swift */; };
 		2DF4E2DD24CE4D34002C2B89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4E2DC24CE4D34002C2B89 /* AppDelegate.swift */; };
 		2DF4E2DF24CE4D34002C2B89 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4E2DE24CE4D34002C2B89 /* SceneDelegate.swift */; };
@@ -39,8 +41,10 @@
 		2D6794E924DA71B400CA1FD3 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		2D6794EB24DCB64000CA1FD3 /* PickGoalsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickGoalsViewController.swift; sourceTree = "<group>"; };
 		2D6794F124DDE93000CA1FD3 /* UserMatchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMatchTableViewCell.swift; sourceTree = "<group>"; };
+		2D67953A24E4F78A00CA1FD3 /* TipsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsViewController.swift; sourceTree = "<group>"; };
+		2D67953C24E4FB5900CA1FD3 /* TipsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipsTableViewCell.swift; sourceTree = "<group>"; };
 		2D67D1C324D5E7FC003CC7A4 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
-		2D67D1C524D5EB8F003CC7A4 /* NewGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupViewController.swift; sourceTree = "<group>"; };
+		2D67D1C524D5EB8F003CC7A4 /* MatchesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesViewController.swift; sourceTree = "<group>"; };
 		2D67D1C724D5F7C8003CC7A4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2DF4E2D924CE4D34002C2B89 /* bruinLabsChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bruinLabsChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DF4E2DC24CE4D34002C2B89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -125,8 +129,9 @@
 				2DF4E2FE24CE4ED8002C2B89 /* NewConversationViewController.swift */,
 				2DF4E30024CE4EE6002C2B89 /* ProfileViewController.swift */,
 				2DF4E30724CF78A3002C2B89 /* ChatViewController.swift */,
-				2D67D1C524D5EB8F003CC7A4 /* NewGroupViewController.swift */,
+				2D67D1C524D5EB8F003CC7A4 /* MatchesViewController.swift */,
 				2D6794EB24DCB64000CA1FD3 /* PickGoalsViewController.swift */,
+				2D67953A24E4F78A00CA1FD3 /* TipsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -145,6 +150,7 @@
 				2DF4E2E524CE4D38002C2B89 /* Assets.xcassets */,
 				2D6794E924DA71B400CA1FD3 /* ConversationTableViewCell.swift */,
 				2D6794F124DDE93000CA1FD3 /* UserMatchTableViewCell.swift */,
+				2D67953C24E4FB5900CA1FD3 /* TipsTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -313,8 +319,9 @@
 			files = (
 				2DF4E2F724CE4E9D002C2B89 /* LoginViewController.swift in Sources */,
 				2DF4E2F924CE4EA9002C2B89 /* RegisterViewController.swift in Sources */,
-				2D67D1C624D5EB8F003CC7A4 /* NewGroupViewController.swift in Sources */,
+				2D67D1C624D5EB8F003CC7A4 /* MatchesViewController.swift in Sources */,
 				2DF4E30824CF78A3002C2B89 /* ChatViewController.swift in Sources */,
+				2D67953B24E4F78B00CA1FD3 /* TipsViewController.swift in Sources */,
 				2D67D1C424D5E7FC003CC7A4 /* StorageManager.swift in Sources */,
 				2DF4E30624CF5317002C2B89 /* DatabaseManager.swift in Sources */,
 				2D6794F224DDE93000CA1FD3 /* UserMatchTableViewCell.swift in Sources */,
@@ -327,6 +334,7 @@
 				2DF4E2DD24CE4D34002C2B89 /* AppDelegate.swift in Sources */,
 				2DF4E30124CE4EE6002C2B89 /* ProfileViewController.swift in Sources */,
 				2DF4E2DF24CE4D34002C2B89 /* SceneDelegate.swift in Sources */,
+				2D67953D24E4FB5900CA1FD3 /* TipsTableViewCell.swift in Sources */,
 				2DF4E2FB24CE4EB8002C2B89 /* PhotoViewerViewController.swift in Sources */,
 				2D67D1C824D5F7C8003CC7A4 /* Extensions.swift in Sources */,
 			);
