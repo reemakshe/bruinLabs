@@ -332,7 +332,7 @@ class NewGroupViewController: UIViewController {
     }
     
     private func getMatches() {
-        DatabaseManager.shared.getAllUsersGoals { [weak self] (result) in
+        DatabaseManager.shared.getFilteredUserMatches { [weak self] (result) in
             switch result {
             case .failure(let error):
                 print("error getting matches \(error)")
@@ -343,7 +343,7 @@ class NewGroupViewController: UIViewController {
                 for userMatch in (self?.userMatches)! {
                      let username = userMatch["username"] as! String
                      let email = userMatch["email"] as! String
-                     let goals = userMatch["goals"] as! [String]
+                    let goals = userMatch["goals"] as! [String]
                      let user = ChatAppUser(username: username, email: email, goals: goals)
                      self?.matches.append(user)
                  }

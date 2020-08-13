@@ -45,13 +45,17 @@ final class DatabaseManager {
     }
     
     
+//    public func insertGoals(email: String, goals: [String]) {
+//        database.child("users").child(email).child("goals").setValue(goals)
+//    }
+    
     public func insertGoals(email: String, goals: [String]) {
         database.child("users").child(email).child("goals").setValue(goals)
     }
     
     
-    public func getAllUsers(completion : @escaping (Result<[[String : String]], Error>) -> Void) {
-        var results = [[String : String]]()
+    public func getAllUsers(completion : @escaping (Result<[[String : Any]], Error>) -> Void) {
+        var results = [[String : Any]]()
         //        var usersEmails = [String]()
         //        var usernames = [String]()
         database.child("users").observeSingleEvent(of: .value) { (snapshot) in
@@ -66,8 +70,9 @@ final class DatabaseManager {
             print("values: \(value)")
             for (user, data) in value {
                 let username = data["username"] as! String
-                results.append(["name" : username, "email" : user])
-//                results.append(["email" : user])
+                let goals = data["goals"] as! [String]
+                results.append(["name" : username, "email" : user, "goals" : goals])
+                //                results.append(["email" : user])
             }
             
             completion(.success(results))
@@ -76,7 +81,8 @@ final class DatabaseManager {
         }
     }
     
-    public func getAllUsersGoals(completion : @escaping (Result<[[String : Any]], Error>) -> Void) {
+    
+    public func getFilteredUserMatches(completion : @escaping (Result<[[String : Any]], Error>) -> Void) {
         var results = [[String : Any]]()
         guard let email = FirebaseAuth.Auth.auth().currentUser?.email else {
             return
@@ -95,7 +101,6 @@ final class DatabaseManager {
                     currentUserData["username"] = data["username"]
                     currentUserData["email"] = user
                     currentUserData["goals"] = data["goals"] as! [String]
-//                    print("current user goals: \(data["goals"])")
                     continue
                 }
                 let username = data["username"] as! String
@@ -103,32 +108,42 @@ final class DatabaseManager {
                 results.append(["username": username, "email": user, "goals" : goals])
             }
             
-            var sortedUsers = [[String : Any]]()
             let currentUserGoals = currentUserData["goals"] as! [String]
+//            let currentUserGoalsCategories = Array(currentUserGoals.keys)
+//            let currentUserGoalsSpecifics = Array(currentUserGoals.values)
+            
+            
+            
+            var filteredUsers = [[String : Any]]()
+
             for entry in results {
                 let user = entry["email"] as! String
                 let goals = entry["goals"] as! [String]
                 let username = entry["username"]
                 var matchTotal = 0
                 for goal in goals {
-                    if currentUserGoals.contains(goal) {
-                        matchTotal += 1
+                    for userGoal in currentUserGoals {
+                        let tokens = userGoal.split(separator: " ")
+                        for token in tokens {
+                            if goal.contains(token) {
+                                matchTotal += 1
+                            }
+                        }
                     }
                 }
-                sortedUsers.append(["email" : user, "match" : matchTotal, "goals" : goals, "username" : username])
+                if (matchTotal != 0) {
+                    filteredUsers.append(["email" : user, "match" : matchTotal, "goals" : goals, "username" : username as! String])
+                }
+            }
+
+
+            filteredUsers.sort {
+                (($0 )["match"] as! Int) > (($1 )["match"] as! Int)
             }
             
-            print("matches before sorting : \(sortedUsers)")
-            
-            sortedUsers.sort {
-                (($0 as! [String : Any])["match"] as! Int) > (($1 as! [String : Any])["match"] as! Int)
-            }
-            
-            print("matches after sorting : \(sortedUsers)")
-//            sortedUsers = sortedUsers.s
-            
-            completion(.success(sortedUsers))
-            print("successfully got all users with goals")
+            completion(.success(filteredUsers))
+            print(filteredUsers)
+
         }
     }
     
@@ -347,8 +362,8 @@ extension DatabaseManager {
                     return nil
                 }
                 guard let name = dictionary["other_name"] as? String else {
-                        print("not able to make into compact map")
-                        return nil
+                    print("not able to make into compact map")
+                    return nil
                 }
                 
                 print("conversationid \(conversationId)")
@@ -493,7 +508,7 @@ extension DatabaseManager {
                             targetConversation = conversation
                             break
                         }
-                         position += 1
+                        position += 1
                     }
                     print("target conversation before update: \(targetConversation)")
                     targetConversation?["latest_message"] = updatedValue
@@ -533,7 +548,7 @@ extension DatabaseManager {
                             targetConversation = conversation
                             break
                         }
-                         position += 1
+                        position += 1
                     }
                     targetConversation?["latest_message"] = updatedValue
                     guard let finalConversation = targetConversation else {
@@ -559,15 +574,15 @@ extension DatabaseManager {
     public func getUsername(email: String) -> String {
         print("getting username")
         var value = ""
-//        database.child(email).child("username").observe(.value) { (snapshot) in
-//            if snapshot.exists() {
-//                value = snapshot.value as! String
-//            }
-//            else {
-//                print("username snapshot: \(snapshot.value)")
-//                print("failed to get username")
-//            }
-//        }
+        //        database.child(email).child("username").observe(.value) { (snapshot) in
+        //            if snapshot.exists() {
+        //                value = snapshot.value as! String
+        //            }
+        //            else {
+        //                print("username snapshot: \(snapshot.value)")
+        //                print("failed to get username")
+        //            }
+        //        }
         
         database.child(email).child("username").observeSingleEvent(of: .value) { (snapshot) in
             if snapshot.exists() {
@@ -598,11 +613,13 @@ struct ChatAppUser {
         
     }
     
+    //    let goals : [String]
+    
     let goals : [String]
-//    let profile_pic = "\(safeEmail)_profile_picture.png"
+    //    let profile_pic = "\(safeEmail)_profile_picture.png"
     
     var profilePicUrl : String {
-            return "\(safeEmail)_profile_picture.png"
+        return "\(safeEmail)_profile_picture.png"
     }
 }
 

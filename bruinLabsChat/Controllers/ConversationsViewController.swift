@@ -121,7 +121,7 @@ class ConversationsViewController: UIViewController {
             let currentConversations = strongSelf.conversations
             
             if let targetConversation = currentConversations.first(where: {
-                $0.other_user_email == DatabaseManager.safeEmail(email: result["email"]!)
+                $0.other_user_email == DatabaseManager.safeEmail(email: result["email"] as! String)
             }) {
                 
                 let vc = ChatViewController(otherUser: targetConversation.other_user_email, id: targetConversation.id)
@@ -139,7 +139,7 @@ class ConversationsViewController: UIViewController {
         present(nav, animated: true)
     }
     
-    private func createNewConversation(result: [String : String]) {
+    private func createNewConversation(result: [String : Any]) {
 //        let groupName = Array(result.keys)[0]
 //        let members = result[groupName]
 //        let names = result["names"]
@@ -148,8 +148,8 @@ class ConversationsViewController: UIViewController {
             print("NBAME EMIAL ERROR")
             return
         }
-        let vc = ChatViewController(otherUser: email, id: nil)
-        vc.title = name
+        let vc = ChatViewController(otherUser: email as! String, id: nil)
+        vc.title = name as! String
 //        let vc = ChatViewController(gr: groupName, with: members!)
         vc.isNewConversation = true
 //        let nav = UINavigationController(rootViewController: ConversationsViewController())
@@ -213,16 +213,33 @@ extension ConversationsViewController : UITableViewDelegate, UITableViewDataSour
     }
     
     func orderConversationsBasedOnTime() {
-        var ordered = [Conversation]()
+//        var ordered = [Conversation]()
         
-        for conversation in conversations {
-            //implement some sorting algorithm based on date if there is time
-            //let currConvDate
+        conversations.sort {
+            //            ((($0 as! [String : Any])["match"] as! Int) > (($1 as! [String : Any])["match"] as! Int))
+            let val = ChatViewController.dateFormatter.date(from: ($0).latest_message.date)?.compare(ChatViewController.dateFormatter.date(from: ($1).latest_message.date)!)
+            if val == ComparisonResult.orderedDescending {
+                return true
+            }
+            else {
+                return false
+            }
         }
+        
+//        for conversation in conversations {
+//            //implement some sorting algorithm based on date if there is time
+//            //let currConvDate
+//            let message = conversation.latest_message
+//            let dateString = message.date
+//            let date = ChatViewController.dateFormatter.date(from: dateString)
+//
+//        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        orderConversationsBasedOnTime()
+        
         let model = conversations[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier, for: indexPath) as! ConversationTableViewCell
         cell.configure(with: model)
@@ -232,6 +249,8 @@ extension ConversationsViewController : UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        orderConversationsBasedOnTime()
+        
         let model = conversations[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
         openConversation(model: model)

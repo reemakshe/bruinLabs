@@ -11,12 +11,12 @@ import FirebaseAuth
 
 class NewConversationViewController: UIViewController {
     
-    public var completion: (([String : String] )-> Void)?
+    public var completion: (([String : Any] )-> Void)?
     
 //    private var groups = [String : [String : [String : String]]]()
 //    private var results = [Dictionary<String, Int>.Element]()
-    private var users = [[String : String]]()
-    private var results = [[String : String]]()
+    private var users = [[String : Any]]()
+    private var results = [[String : Any]]()
     private var usersWithGoals = [[String : Any]]()
     private var resultsWithGoals = [[String : Any]]()
 
@@ -91,7 +91,7 @@ extension NewConversationViewController : UITableViewDelegate, UITableViewDataSo
 //        let cell = tableView.dequeueReusableCell(withIdentifier: UserMatchTableViewCell.identifier, for: indexPath)
 //        cell.textLabel!.text = results[indexPath.row]["name"]
         let result = results[indexPath.row]
-        let user = ChatAppUser(username: result["name"] as! String, email: result["email"] as! String, goals: [""])
+        let user = ChatAppUser(username: result["name"] as! String, email: result["email"] as! String, goals: result["goals"] as! [String])
         let cell = tableView.dequeueReusableCell(withIdentifier: UserMatchTableViewCell.identifier, for: indexPath) as! UserMatchTableViewCell
         cell.configure(user: user)
 //        print(results[indexPath.row]["name"])
@@ -148,20 +148,20 @@ extension NewConversationViewController : UISearchBarDelegate {
         else {
             DatabaseManager.shared.getAllUsers { [weak self] (result) in
                 switch result {
-                case .success(let groupsCollection):
+                case .success(let usersCollection):
 //                    print("calling filter")
-                    self?.users = groupsCollection
+                    self?.users = usersCollection
                     self?.hasFetched = true
                     self?.filterUsers(query: query)
                 case .failure(let error):
-                    print("Failed to get groups \(error)")
+                    print("Failed to get users \(error)")
                 }
             }
-            DatabaseManager.shared.getAllUsersGoals { [weak self] (result) in
+            DatabaseManager.shared.getFilteredUserMatches { [weak self] (result) in
                             switch result {
-                            case .success(let groupsCollection):
+                            case .success(let usersCollection):
             //                    print("calling filter")
-                                self?.usersWithGoals = groupsCollection
+                                self?.usersWithGoals = usersCollection
                                 self?.hasFetched = true
                                 self?.filterUsers(query: query)
                             case .failure(let error):
@@ -179,11 +179,11 @@ extension NewConversationViewController : UISearchBarDelegate {
         }
         print("not filtered results: \(users)")
         
-        var results: [[String : String]] = self.users.filter({
-            guard let name = $0["name"]?.lowercased(), $0["email"] != safeEmail else {
+        let results: [[String : Any]] = self.users.filter({
+            guard let rawname = $0["name"] as? String, ($0["email"] as? String) != safeEmail else {
                 return false
             }
-            
+            let name = rawname.lowercased()
 //            let email = $0["email"]
             
             return name.hasPrefix(query.lowercased())
