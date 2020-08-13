@@ -17,7 +17,8 @@ class UserMatchTableViewCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 50
         imageView.layer.masksToBounds = true
-//        imageView.layer.borderColor = 
+        imageView.layer.borderColor = CGColor(srgbRed: 0.15686, green: 0.262745, blue: 0.3058823, alpha: 1)
+        imageView.layer.borderWidth = 2.2
         return imageView
     }()
     

@@ -15,6 +15,8 @@ class TipsViewController: UIViewController {
         let table = UITableView()
 //        table.backgroundColor = .blue
         table.isHidden = true
+        table.separatorStyle = .none
+        table.separatorColor = .clear
 //        table.tintColor
 //        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         table.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
@@ -24,8 +26,9 @@ class TipsViewController: UIViewController {
     private let tipTextField : UITextField = {
         let text = UITextField()
         text.placeholder = "enter a tip"
-        text.textAlignment = .center
+        text.textAlignment = .natural
         text.borderStyle = .roundedRect
+        text.autocapitalizationType = .none
         return text
     }()
     
@@ -58,6 +61,7 @@ class TipsViewController: UIViewController {
         self.view.addSubview(noConvsLabel)
         self.view.addSubview(tipTextField)
         self.view.addSubview(tipButton)
+//        tips.shuffle()
         tableView.isHidden = false
         tipButton.addTarget(self, action: #selector(didTapTipButton), for: .touchUpInside)
         setUpTableView()
@@ -86,6 +90,7 @@ class TipsViewController: UIViewController {
 
             case .success(let tips):
                 self?.tips = tips
+                self?.tips.shuffle()
                 self?.tableView.isHidden = false
                 self?.noConvsLabel.isHidden = true
                 DispatchQueue.main.async {
@@ -111,9 +116,11 @@ class TipsViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let safeAreaFrame = view.safeAreaLayoutGuide.layoutFrame
+        tableView.separatorStyle = .none
+        tableView.separatorColor = .clear
         tableView.frame = CGRect(x: 0, y: 0, width: view.width, height: safeAreaFrame.height - 20)
-        tipTextField.frame = CGRect(x: 10, y: tableView.bottom, width: view.width - 115, height: 50)
-        tipButton.frame = CGRect(x: tipTextField.right + 5 , y: tableView.bottom, width: 90, height: 50)
+        tipTextField.frame = CGRect(x: 10, y: tableView.bottom + 5, width: view.width - 115, height: 50)
+        tipButton.frame = CGRect(x: tipTextField.right + 5 , y: tableView.bottom + 5, width: 90, height: 50)
     }
     
     
@@ -139,12 +146,24 @@ extension TipsViewController : UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TipsTableViewCell.identifier, for: indexPath) as! TipsTableViewCell
-        cell.configure(text: tips[indexPath.row])
+        let randomR = CGFloat(Float.random(in: 0.5..<0.95)) as CGFloat
+        let randomG = CGFloat(Float.random(in: 0.5..<0.95)) as CGFloat
+        let randomB = CGFloat(Float.random(in: 0.5..<0.95)) as CGFloat
+        cell.configure(text: tips[indexPath.row], r: randomR, g: randomG, b: randomB)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 55
+        let tip = tips[indexPath.row]
+//        let tipSep = tip.split(separator: " ")
+        let tipSize = (CGFloat(tip.count) / 25.0)
+        if (tipSize <= 1) {
+            return 85
+        }
+        else {
+            return 55 * tipSize
+        }
+//        return 100
     }
 }
 

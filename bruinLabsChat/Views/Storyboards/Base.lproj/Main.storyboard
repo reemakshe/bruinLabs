@@ -421,6 +421,7 @@
                         <viewLayoutGuide key="safeArea" id="YHL-PQ-0ZN"/>
                     </view>
                     <navigationItem key="navigationItem" title="tips" id="ZBo-al-Qoo"/>
+                    <nil key="simulatedTopBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UEC-9M-5aD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

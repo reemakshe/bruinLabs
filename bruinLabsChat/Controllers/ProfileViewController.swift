@@ -35,6 +35,8 @@ class ProfileViewController: UIViewController {
         //        tableView.delegate = self
         //        tableView.dataSource = self
         profileImageView.layer.cornerRadius = 75.0
+        profileImageView.layer.borderColor = CGColor(srgbRed: 0.15686, green: 0.262745, blue: 0.3058823, alpha: 1)
+        profileImageView.layer.borderWidth = 2.2
 //        let email = UserDefaults.standard.value(forKey: "email") as! String
         let email = FirebaseAuth.Auth.auth().currentUser?.email as! String
         let safeEmail = DatabaseManager.safeEmail(email: email) as! String
@@ -86,7 +88,12 @@ class ProfileViewController: UIViewController {
             let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "loginVC") as! LoginViewController
             let nav = UINavigationController(rootViewController: loginVC)
             nav.modalPresentationStyle = .fullScreen
+            nav.navigationBar.isHidden = true
             present(nav, animated: true)
+//            let convVC = self.storyboard?.instantiateViewController(withIdentifier: "tabVC") as! UITabBarController
+//            let nav = UINavigationController(rootViewController: convVC)
+//            nav.modalPresentationStyle = .fullScreen
+//            self.present(nav, animated: true)
         }
         catch {
             print("failed to log out")

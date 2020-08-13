@@ -173,6 +173,7 @@ class ConversationsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationController?.isNavigationBarHidden = false
+        self.navigationController?.navigationItem
         validateAuth()
 
 //        startListeningForConversations()
