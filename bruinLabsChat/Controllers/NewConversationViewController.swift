@@ -90,6 +90,8 @@ extension NewConversationViewController : UITableViewDelegate, UITableViewDataSo
         print("putting thing in table view")
 //        let cell = tableView.dequeueReusableCell(withIdentifier: UserMatchTableViewCell.identifier, for: indexPath)
 //        cell.textLabel!.text = results[indexPath.row]["name"]
+        print("results count: \(results.count)")
+        print("index path row : \(indexPath.row)")
         let result = results[indexPath.row]
         let user = ChatAppUser(username: result["name"] as! String, email: result["email"] as! String, goals: result["goals"] as! [String])
         let cell = tableView.dequeueReusableCell(withIdentifier: UserMatchTableViewCell.identifier, for: indexPath) as! UserMatchTableViewCell
@@ -142,7 +144,7 @@ extension NewConversationViewController : UISearchBarDelegate {
         //maybe gives 2x points if the words are in the name of the group?
         
         if hasFetched {
-            filterUsers(query: query)
+            filterUsers(query: query.lowercased())
         }
         
         else {
@@ -152,22 +154,12 @@ extension NewConversationViewController : UISearchBarDelegate {
 //                    print("calling filter")
                     self?.users = usersCollection
                     self?.hasFetched = true
-                    self?.filterUsers(query: query)
+                    self?.filterUsers(query: query.lowercased())
                 case .failure(let error):
                     print("Failed to get users \(error)")
                 }
             }
-            DatabaseManager.shared.getFilteredUserMatches { [weak self] (result) in
-                            switch result {
-                            case .success(let usersCollection):
-            //                    print("calling filter")
-                                self?.usersWithGoals = usersCollection
-                                self?.hasFetched = true
-                                self?.filterUsers(query: query)
-                            case .failure(let error):
-                                print("Failed to get groups \(error)")
-                            }
-            }
+
         }
         
         
@@ -180,18 +172,19 @@ extension NewConversationViewController : UISearchBarDelegate {
         print("not filtered results: \(users)")
         
         let results: [[String : Any]] = self.users.filter({
-            guard let rawname = $0["name"] as? String, ($0["email"] as? String) != safeEmail else {
+//            , ($0["email"] as? String) != safeEmail
+            guard let rawname = $0["name"] as? String, let goals = $0["goals"] as? [String] else {
+                print("could not format vars")
                 return false
             }
             let name = rawname.lowercased()
 //            let email = $0["email"]
-            
-            return name.hasPrefix(query.lowercased())
+            let allGoals = (goals.joined(separator: " ")).lowercased()
+            print("allgoals: \(allGoals)")
+            print("query: \(query)")
+            return allGoals.contains(query) || name.hasPrefix(query.lowercased())
+//            return name.hasPrefix(query.lowercased())
         })
-        
-//        var resultsWithGoals: [[String : Any]] = self.usersWithGoals.filter({
-//            guard var name = $0["name"] as? String, name = name.lowercased(),
-//        })
         
         print("filtered results: \(results)")
         self.results = results
@@ -199,46 +192,9 @@ extension NewConversationViewController : UISearchBarDelegate {
         
     }
     
-//    func filterGroups(with term : String) {
-//        guard hasFetched else {
-//            return
-//        }
-//        
-////        var results : [String : Any] = self.groups.filter { (term, Any) -> Bool in
-////
-////        }
-//        var groupMatches = [String : Int]()
-//        for (group, results) in groups {
-////            print("filtering")
-//            groupMatches[group] = Tools.levenshtein(aStr: group, bStr: term)
-//
-//            let tags = results["tags"]
-//            for (tag, _) in tags! {
-//                var val : Int
-//                if groupMatches[group] == nil {
-//                    val = 0
-//                }
-//                else {
-//                    val = groupMatches[group]!
-//                }
-//                val += Tools.levenshtein(aStr: tag, bStr: term)
-//                groupMatches[group] = val
-//            }
-////            print("tags: \(tags)")
-//            
-//        }
-//        
-//        var sortedGroupMatches = groupMatches.sorted(by: { $0.value >= $1.value })
-////        print(sortedGroupMatches)
-//        self.results = sortedGroupMatches
-////        print("key \(results[0].key)")
-//        
-//        updateUI()
-//        
-//    }
-    
     func updateUI() {
-        if results.isEmpty {
+        if results.count == 0 {
+            print("results are empty")
             self.noResultsLabel.isHidden = false
             self.tableView.isHidden = true
         }
