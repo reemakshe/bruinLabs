@@ -7,18 +7,14 @@ class TipsViewController: UIViewController {
     
     private var tips = [String]()
     
-//    private var userMatches = [[String : Any]]()
     
     private var hasFetched = false
     
     private let tableView : UITableView = {
         let table = UITableView()
-//        table.backgroundColor = .blue
         table.isHidden = true
         table.separatorStyle = .none
         table.separatorColor = .clear
-//        table.tintColor
-//        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         table.register(TipsTableViewCell.self, forCellReuseIdentifier: TipsTableViewCell.identifier)
         return table
     }()
@@ -61,7 +57,6 @@ class TipsViewController: UIViewController {
         self.view.addSubview(noConvsLabel)
         self.view.addSubview(tipTextField)
         self.view.addSubview(tipButton)
-//        tips.shuffle()
         tableView.isHidden = false
         tipButton.addTarget(self, action: #selector(didTapTipButton), for: .touchUpInside)
         setUpTableView()
@@ -139,8 +134,6 @@ class TipsViewController: UIViewController {
 extension TipsViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        print("matches count \(tips.count)")
-//        return tips.count
         return tips.count
     }
 
@@ -155,7 +148,6 @@ extension TipsViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let tip = tips[indexPath.row]
-//        let tipSep = tip.split(separator: " ")
         let tipSize = (CGFloat(tip.count) / 25.0)
         if (tipSize <= 1) {
             return 85
@@ -163,7 +155,6 @@ extension TipsViewController : UITableViewDelegate, UITableViewDataSource {
         else {
             return 55 * tipSize
         }
-//        return 100
     }
 }
 

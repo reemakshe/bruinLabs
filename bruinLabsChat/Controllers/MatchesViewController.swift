@@ -11,12 +11,12 @@ class MatchesViewController: UIViewController {
     
     private var hasFetched = false
     
+    private var selectedUsers = [ChatAppUser]()
+    
     private let tableView : UITableView = {
         let table = UITableView()
-//        table.backgroundColor = .blue
         table.isHidden = true
-//        table.tintColor
-//        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        table.allowsMultipleSelection = true
         table.register(UserMatchTableViewCell.self, forCellReuseIdentifier: UserMatchTableViewCell.identifier)
         return table
     }()
@@ -30,30 +30,25 @@ class MatchesViewController: UIViewController {
         label.isHidden = true
         return label
     }()
-    
-    //implement to allow user to choose what matches are based on
-    private let pickerView : UIPickerView = {
-        let picker = UIPickerView()
-        return picker
-    }()
-    
-    private let spinner = JGProgressHUD(style: .dark)
-    
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(didTapComposeButton))
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAddButton))
-//        self.view.backgroundColor = .red
         self.title = "matches"
         self.view.addSubview(tableView)
         self.view.addSubview(noConvsLabel)
-//        tableView.backgroundColor = UIColor(displayP3Red: 0.85882, green: 0.92941, blue: 0.964705, alpha: 1)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(didTapDoneButton))
         tableView.isHidden = false
-//        self.title = "groups"
         setUpTableView()
-//        fetchConversations()
         getMatches()
+    }
+    
+    @objc private func didTapDoneButton() {
+        guard let selectedPaths = tableView.indexPathsForSelectedRows else {
+            print("no selected rows")
+            return
+        }
+        createNewConversation(users: selectedUsers)
     }
     
     private func getMatches() {
@@ -88,28 +83,27 @@ class MatchesViewController: UIViewController {
         print("user matches that will be put in table view: \(matches)")
     }
         
-//    @objc private func didTapComposeButton() {
-//        let vc = NewConversationViewController()
-//        vc.completion = {[weak self] result in
-//            print("\(result)")
-//            self?.createNewConversation(result: result)
-//        }
-//        let nav = UINavigationController(rootViewController: vc)
-//        present(nav, animated: true)
-//    }
-    
-    private func createNewConversation(user : ChatAppUser) {
+    private func createNewConversation(users : [ChatAppUser]) {
+        var names = [String]()
+        var emails = [String]()
+        for user in users {
+            names.append(user.username)
+            emails.append(user.email)
+        }
 
-        let name = user.username
-        let email = user.safeEmail
-        let vc = ChatViewController(otherUser: email, id: nil)
-        vc.title = name
-        vc.isNewConversation = true
+        let name = names.joined(separator: ", ")
+        print("names: \(names) and emails: \(emails)")
+        
+        let chatVC = ChatViewController(otherUser: emails, otherNames: names, id: nil)
+        chatVC.title = name
+        chatVC.isNewConversation = true
 
         navigationController?.popToRootViewController(animated: true)
-        navigationController?.pushViewController(vc, animated: true)
-        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(chatVC, animated: true)
+        chatVC.navigationItem.largeTitleDisplayMode = .never
         print("putting new convo chat controller screen")
+        
+        
     }
 
     
@@ -122,6 +116,7 @@ class MatchesViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
+        selectedUsers.removeAll()
     }
     
     
@@ -142,38 +137,31 @@ extension MatchesViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print("matches count \(matches.count)")
         return matches.count
-//        return 1
     }
     
-//    func orderConversationsBasedOnTime() {
-//        var ordered = [Conversation]()
-//
-//        for match in userMatches {
-//            //implement some sorting algorithm based on date if there is time
-//            //let currConvDate
-//        }
-//    }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-//        let userDict = userMatches[indexPath.row]
-//        let user = ChatAppUser(username: userDict["username"] as! String, email: userDict["email"] as! String, goals: userDict["goals"] as! [String])
         let user = matches[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: UserMatchTableViewCell.identifier, for: indexPath) as! UserMatchTableViewCell
         cell.configure(user: user)
-//        cell.textLabel?.text = "Hello world"
-//        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = matches[indexPath.row]
-        tableView.deselectRow(at: indexPath, animated: true)
-        createNewConversation(user: user)
-        print("making chat view controller new controller")
-        
+        guard let cell = tableView.cellForRow(at: indexPath) else {
+            return
+        }
+        if (cell.accessoryType == .checkmark) {
+            cell.accessoryType = .none
+            tableView.deselectRow(at: indexPath, animated: true)
+            self.selectedUsers.remove(at: indexPath.row)
+        }
+        else {
+            cell.accessoryType = .checkmark
+            self.selectedUsers.append(matches[indexPath.row])
+        }
+//
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.row < matches.count) {
             return 120

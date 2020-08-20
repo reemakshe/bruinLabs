@@ -25,7 +25,6 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden = true
-//        title = "Log In"
         
         loginButton.layer.cornerRadius = 10.0
         signUpButton.layer.cornerRadius = 10.0
@@ -33,21 +32,12 @@ class LoginViewController: UIViewController {
         
     }
     
-   // @objc private func didTapSignUp() {
-     //   let vc = RegisterViewController()
-       // vc.title = "Create an account"
-       // navigationController?.pushViewController(vc, animated: true)
-   // }
-    
     
     @IBAction func didTapLogin(_ sender: Any) {
         
         if emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
             passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == ""
         {
-//            errorLabel.text = "Please enter all fields."
-//            errorLabel.alpha = 1
-            
             let alert = UIAlertController(title: "oops!", message: "please enter all fields", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "dismiss", style: .cancel, handler: nil))
             present(alert, animated: true)
@@ -68,35 +58,25 @@ class LoginViewController: UIViewController {
 //                    let user = result!.user
                     UserDefaults.standard.set(email, forKey: "email")
                     let safeEmail = DatabaseManager.safeEmail(email: email)
-                    let username = DatabaseManager.shared.getUsername(email: safeEmail)
-                    UserDefaults.standard.set(username, forKey: "username")
+                    let group = DispatchGroup()
+                    group.enter()
+                    let username = ""
+                    DatabaseManager.shared.getUsername(email: safeEmail)
+
                     print("user defaults: \(email), \(username)")
-//                    self.navigationController?.dismiss(animated: true, completion: nil)
-//                    self.navigationController?.pushViewController(ConversationsViewController(), animated: true)
-//                    self.navigationController?.dismiss(animated: true, completion: {
-//                        print("dismissed login screen")
-//                    })
-//                    self.navigationController?.popToRootViewController(animated: false)
-//                    self.navigationController?.pushViewController(ConversationsViewController(), animated: true)
                     let convVC = self.storyboard?.instantiateViewController(withIdentifier: "tabVC") as! UITabBarController
-                    let nav = UINavigationController(rootViewController: convVC)
-                    nav.modalPresentationStyle = .fullScreen
-                    self.present(nav, animated: true)
+                    convVC.modalPresentationStyle = .fullScreen
+                    self.present(convVC, animated: true)
                     
                 }
             }
             
         }
-        
-        
-        
-        
 
     }
     
 
     @IBAction func didTapSignUp(_ sender: Any) {
-//        let regVC = self.storyboard?.instantiateViewController(withIdentifier: "registerVC") as! RegisterViewController
         let regVC = RegisterViewController()
         navigationController?.pushViewController(regVC, animated: true)
     }

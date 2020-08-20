@@ -12,15 +12,12 @@ import FirebaseAuth
 class NewConversationViewController: UIViewController {
     
     public var completion: (([String : Any] )-> Void)?
-    
-//    private var groups = [String : [String : [String : String]]]()
-//    private var results = [Dictionary<String, Int>.Element]()
+
     private var users = [[String : Any]]()
     private var results = [[String : Any]]()
     private var usersWithGoals = [[String : Any]]()
     private var resultsWithGoals = [[String : Any]]()
 
-//    private var groups = [String : Any]()
     private var hasFetched = false
     
     private let searchBar : UISearchBar = {
@@ -78,25 +75,14 @@ class NewConversationViewController: UIViewController {
 
 extension NewConversationViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("results \(results)")
-        print("results count \(self.results.count)")
-//        return self.results.count
-        //choosing at most the 5 most relevant groups to display
-//        return min(self.results.count, 5)
         return results.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("putting thing in table view")
-//        let cell = tableView.dequeueReusableCell(withIdentifier: UserMatchTableViewCell.identifier, for: indexPath)
-//        cell.textLabel!.text = results[indexPath.row]["name"]
-        print("results count: \(results.count)")
-        print("index path row : \(indexPath.row)")
         let result = results[indexPath.row]
         let user = ChatAppUser(username: result["name"] as! String, email: result["email"] as! String, goals: result["goals"] as! [String])
         let cell = tableView.dequeueReusableCell(withIdentifier: UserMatchTableViewCell.identifier, for: indexPath) as! UserMatchTableViewCell
         cell.configure(user: user)
-//        print(results[indexPath.row]["name"])
         return cell
     }
     
@@ -110,17 +96,7 @@ extension NewConversationViewController : UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
            return 120
        }
-        //start conversation
-//        let name = results[indexPath.row]["name"]
-////        let groupMembers = Array((groups[groupName])!["members"]?.keys)
-////        let groupMembersNames = (groups[groupName])!["members"] as! [String : String]
-////        let groupNames = Array((groups[groupName])!["names"]!.keys)
-//        let targetGroup = [groupName : groupMembersNames]
-////        let targetGroup = groups[results[indexPath.row].key]
-//        completion?(targetGroup)
-//        dismiss(animated: true) { [weak self] in
-//            self?.completion?(targetGroup)
-//        }
+
     }
 }
 
@@ -138,10 +114,6 @@ extension NewConversationViewController : UISearchBarDelegate {
     }
     
     func searchUsers(query: String) {
-        //check if there is a group with that name or groups with tags in query
-        //try -> for each word in query, if a group name/tags has no common things do not show it, then rank
-        //further based on how many words in query are in that
-        //maybe gives 2x points if the words are in the name of the group?
         
         if hasFetched {
             filterUsers(query: query.lowercased())
@@ -151,7 +123,6 @@ extension NewConversationViewController : UISearchBarDelegate {
             DatabaseManager.shared.getAllUsers { [weak self] (result) in
                 switch result {
                 case .success(let usersCollection):
-//                    print("calling filter")
                     self?.users = usersCollection
                     self?.hasFetched = true
                     self?.filterUsers(query: query.lowercased())
@@ -172,18 +143,15 @@ extension NewConversationViewController : UISearchBarDelegate {
         print("not filtered results: \(users)")
         
         let results: [[String : Any]] = self.users.filter({
-//            , ($0["email"] as? String) != safeEmail
             guard let rawname = $0["name"] as? String, let goals = $0["goals"] as? [String] else {
                 print("could not format vars")
                 return false
             }
             let name = rawname.lowercased()
-//            let email = $0["email"]
             let allGoals = (goals.joined(separator: " ")).lowercased()
             print("allgoals: \(allGoals)")
             print("query: \(query)")
             return allGoals.contains(query) || name.hasPrefix(query.lowercased())
-//            return name.hasPrefix(query.lowercased())
         })
         
         print("filtered results: \(results)")

@@ -58,20 +58,29 @@ class ConversationTableViewCell: UITableViewCell {
     
     public func configure(with model : Conversation) {
         self.userMessageLabel.text = model.latest_message.text
-        self.userNameLabel.text = model.name
+        self.userNameLabel.text = model.conv_name
+//        self.userNameLabel.text = (model.names).joined(separator: ", ")
         
-        let path = "images/\(model.other_user_email)_profile_picture.png"
-        print("image url path \(path)")
-        StorageManager.shared.downloadURL(for: path) { [weak self] (result) in
-            switch result {
-            case .success(let url):
-                DispatchQueue.main.async {
-                    self?.userImageView.sd_setImage(with: url, completed: nil)
+        var path = ""
+        if (model.other_user_emails.count == 1) {
+            path = "images/\(model.other_user_emails[0])_profile_picture.png"
+            StorageManager.shared.downloadURL(for: path) { [weak self] (result) in
+                switch result {
+                case .success(let url):
+                    DispatchQueue.main.async {
+                        self?.userImageView.sd_setImage(with: url, completed: nil)
+                    }
+                case .failure(let error):
+                    print("failed to get image: \(error)")
                 }
-            case .failure(let error):
-                print("failed to get image: \(error)")
             }
         }
+        else {
+            self.userImageView.image = UIImage(systemName: "heart.circle")
+            self.userImageView.tintColor = UIColor(displayP3Red: 0.498, green: 0.6627, blue: 0.847, alpha: 1)
+        }
+        print("image url path \(path)")
+        
     }
     
     required init?(coder: NSCoder) {

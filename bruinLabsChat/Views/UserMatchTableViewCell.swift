@@ -54,8 +54,14 @@ class UserMatchTableViewCell: UITableViewCell {
     }
     
     public func configure(user : ChatAppUser) {
-        let goalsString = (user.goals).joined(separator: ", ")
-        self.userGoalsLabel.text = "goals: \(goalsString)"
+        if (user.goals == [""]) {
+            self.userGoalsLabel.text = ""
+            userNameLabel.font = UIFont(name: "Avenir-Heavy", size: 35)
+        }
+        else {
+            let goalsString = (user.goals).joined(separator: ", ")
+            self.userGoalsLabel.text = "goals: \(goalsString)"
+        }
         self.userNameLabel.text = user.username
         
         let path = "images/\(user.safeEmail)_profile_picture.png"

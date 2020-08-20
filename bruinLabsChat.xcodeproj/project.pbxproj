@@ -17,6 +17,7 @@
 		2D67D1C424D5E7FC003CC7A4 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67D1C324D5E7FC003CC7A4 /* StorageManager.swift */; };
 		2D67D1C624D5EB8F003CC7A4 /* MatchesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67D1C524D5EB8F003CC7A4 /* MatchesViewController.swift */; };
 		2D67D1C824D5F7C8003CC7A4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D67D1C724D5F7C8003CC7A4 /* Extensions.swift */; };
+		2DE1D57E24E71EEC002C436E /* GroupInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1D57D24E71EEC002C436E /* GroupInfoViewController.swift */; };
 		2DF4E2DD24CE4D34002C2B89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4E2DC24CE4D34002C2B89 /* AppDelegate.swift */; };
 		2DF4E2DF24CE4D34002C2B89 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4E2DE24CE4D34002C2B89 /* SceneDelegate.swift */; };
 		2DF4E2E124CE4D34002C2B89 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4E2E024CE4D34002C2B89 /* ConversationsViewController.swift */; };
@@ -25,8 +26,6 @@
 		2DF4E2E924CE4D38002C2B89 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2DF4E2E724CE4D38002C2B89 /* LaunchScreen.storyboard */; };
 		2DF4E2F724CE4E9D002C2B89 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4E2F624CE4E9D002C2B89 /* LoginViewController.swift */; };
 		2DF4E2F924CE4EA9002C2B89 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4E2F824CE4EA9002C2B89 /* RegisterViewController.swift */; };
-		2DF4E2FB24CE4EB8002C2B89 /* PhotoViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4E2FA24CE4EB8002C2B89 /* PhotoViewerViewController.swift */; };
-		2DF4E2FD24CE4EC8002C2B89 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4E2FC24CE4EC8002C2B89 /* VideoPlayerViewController.swift */; };
 		2DF4E2FF24CE4ED8002C2B89 /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4E2FE24CE4ED8002C2B89 /* NewConversationViewController.swift */; };
 		2DF4E30124CE4EE6002C2B89 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4E30024CE4EE6002C2B89 /* ProfileViewController.swift */; };
 		2DF4E30424CF4BA1002C2B89 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2DF4E30324CF4BA0002C2B89 /* GoogleService-Info.plist */; };
@@ -46,6 +45,7 @@
 		2D67D1C324D5E7FC003CC7A4 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		2D67D1C524D5EB8F003CC7A4 /* MatchesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesViewController.swift; sourceTree = "<group>"; };
 		2D67D1C724D5F7C8003CC7A4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		2DE1D57D24E71EEC002C436E /* GroupInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInfoViewController.swift; sourceTree = "<group>"; };
 		2DF4E2D924CE4D34002C2B89 /* bruinLabsChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bruinLabsChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DF4E2DC24CE4D34002C2B89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2DF4E2DE24CE4D34002C2B89 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -56,8 +56,6 @@
 		2DF4E2EA24CE4D38002C2B89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2DF4E2F624CE4E9D002C2B89 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		2DF4E2F824CE4EA9002C2B89 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
-		2DF4E2FA24CE4EB8002C2B89 /* PhotoViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerViewController.swift; sourceTree = "<group>"; };
-		2DF4E2FC24CE4EC8002C2B89 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		2DF4E2FE24CE4ED8002C2B89 /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		2DF4E30024CE4EE6002C2B89 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		2DF4E30324CF4BA0002C2B89 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -124,14 +122,13 @@
 			children = (
 				2DF4E30224CE4F4A002C2B89 /* Login */,
 				2DF4E2E024CE4D34002C2B89 /* ConversationsViewController.swift */,
-				2DF4E2FA24CE4EB8002C2B89 /* PhotoViewerViewController.swift */,
-				2DF4E2FC24CE4EC8002C2B89 /* VideoPlayerViewController.swift */,
 				2DF4E2FE24CE4ED8002C2B89 /* NewConversationViewController.swift */,
 				2DF4E30024CE4EE6002C2B89 /* ProfileViewController.swift */,
 				2DF4E30724CF78A3002C2B89 /* ChatViewController.swift */,
 				2D67D1C524D5EB8F003CC7A4 /* MatchesViewController.swift */,
 				2D6794EB24DCB64000CA1FD3 /* PickGoalsViewController.swift */,
 				2D67953A24E4F78A00CA1FD3 /* TipsViewController.swift */,
+				2DE1D57D24E71EEC002C436E /* GroupInfoViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -328,14 +325,13 @@
 				2DF4E2FF24CE4ED8002C2B89 /* NewConversationViewController.swift in Sources */,
 				2DF4E2E124CE4D34002C2B89 /* ConversationsViewController.swift in Sources */,
 				2D6794EA24DA71B400CA1FD3 /* ConversationTableViewCell.swift in Sources */,
-				2DF4E2FD24CE4EC8002C2B89 /* VideoPlayerViewController.swift in Sources */,
+				2DE1D57E24E71EEC002C436E /* GroupInfoViewController.swift in Sources */,
 				2D6794E824D6549900CA1FD3 /* Tools.swift in Sources */,
 				2D6794EC24DCB64100CA1FD3 /* PickGoalsViewController.swift in Sources */,
 				2DF4E2DD24CE4D34002C2B89 /* AppDelegate.swift in Sources */,
 				2DF4E30124CE4EE6002C2B89 /* ProfileViewController.swift in Sources */,
 				2DF4E2DF24CE4D34002C2B89 /* SceneDelegate.swift in Sources */,
 				2D67953D24E4FB5900CA1FD3 /* TipsTableViewCell.swift in Sources */,
-				2DF4E2FB24CE4EB8002C2B89 /* PhotoViewerViewController.swift in Sources */,
 				2D67D1C824D5F7C8003CC7A4 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

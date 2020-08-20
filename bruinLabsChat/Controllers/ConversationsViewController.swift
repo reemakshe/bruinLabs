@@ -11,10 +11,12 @@ import FirebaseAuth
 import Firebase
 import JGProgressHUD
 
+
 struct Conversation {
     let id : String
-    let name: String
-    let other_user_email : String
+    let conv_name : String
+    let names: [String]
+    let other_user_emails : [String]
     let latest_message : LatestMessage
     
 }
@@ -26,17 +28,13 @@ struct LatestMessage {
 }
 
 class ConversationsViewController: UIViewController {
-    
+        
     private var conversations = [Conversation]()
     
     private let tableView : UITableView = {
         let table = UITableView()
-//        table.backgroundColor = .blue
         table.isHidden = true
-//        table.tintColor
-//        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         table.register(ConversationTableViewCell.self, forCellReuseIdentifier: ConversationTableViewCell.identifier)
-//        table.backgroundColor = UIColor(displayP3Red: 0.87058823, green: 0.956862, blue: 0.992156, alpha: 1)
         return table
     }()
     
@@ -55,8 +53,8 @@ class ConversationsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(didTapComposeButton))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAddButton))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(didTapComposeButton))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(didTapAddButton))
 //        self.view.backgroundColor = .red
         self.navigationController?.isToolbarHidden = true
         self.view.backgroundColor = .white
@@ -72,12 +70,7 @@ class ConversationsViewController: UIViewController {
     
     private func startListeningForConversations() {
         print("listening for conversations")
-//        let handle = Auth.auth().addStateDidChangeListener(<#T##listener: AuthStateDidChangeListenerBlock##AuthStateDidChangeListenerBlock##(Auth, User?) -> Void#>)
         print(FirebaseAuth.Auth.auth().currentUser)
-//        if FirebaseAuth.Auth.auth().currentUser == nil {
-//            print("current user is nil??")
-//            return
-//        }
         
         print(UserDefaults.standard.value(forKey: "email") as? String)
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
@@ -121,12 +114,13 @@ class ConversationsViewController: UIViewController {
             let currentConversations = strongSelf.conversations
             
             if let targetConversation = currentConversations.first(where: {
-                $0.other_user_email == DatabaseManager.safeEmail(email: result["email"] as! String)
+                ($0.other_user_emails) == [(result["email"] as! String)] as [String]
             }) {
                 
-                let vc = ChatViewController(otherUser: targetConversation.other_user_email, id: targetConversation.id)
+
+                let vc = ChatViewController(otherUser: targetConversation.other_user_emails, otherNames: targetConversation.names, id: targetConversation.id)
                 vc.isNewConversation = false
-                vc.title = targetConversation.name
+                vc.title = (targetConversation.names).joined(separator: ", ")
                 vc.navigationItem.largeTitleDisplayMode = .never
                 strongSelf.navigationController?.pushViewController(vc, animated: true)
                 
@@ -140,24 +134,15 @@ class ConversationsViewController: UIViewController {
     }
     
     private func createNewConversation(result: [String : Any]) {
-//        let groupName = Array(result.keys)[0]
-//        let members = result[groupName]
-//        let names = result["names"]
+
         print("results: \(result)")
-        guard let name = result["name"], let email = result["email"] else {
+        guard let name = result["name"] as? String, let email = result["email"] as? String, let emails = [email] as? [String] else {
             print("NBAME EMIAL ERROR")
             return
         }
-        let vc = ChatViewController(otherUser: email as! String, id: nil)
-        vc.title = name as! String
-//        let vc = ChatViewController(gr: groupName, with: members!)
+        let vc = ChatViewController(otherUser: emails, otherNames: [name], id: nil)
+        vc.title = name
         vc.isNewConversation = true
-//        let nav = UINavigationController(rootViewController: ConversationsViewController())
-//        vc.title = "Group One"
-//        vc.navigationItem.largeTitleDisplayMode = .never
-//        nav.pushViewController(vc, animated: true)
-//        self.view.window?.makeKeyAndVisible()
-//        vc.title = groupName
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
         print("putting new convo chat controller screen")
@@ -165,8 +150,6 @@ class ConversationsViewController: UIViewController {
     
     @objc private func didTapAddButton() {
         let vc = MatchesViewController()
-//        let nav = UINavigationController(rootViewController: vc)
-//        present(nav, animated: true)
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -176,7 +159,6 @@ class ConversationsViewController: UIViewController {
         self.navigationController?.navigationItem
         validateAuth()
 
-//        startListeningForConversations()
     }
     
     override func viewDidLayoutSubviews() {
@@ -210,14 +192,10 @@ extension ConversationsViewController : UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print("convserations count \(conversations.count)")
         return conversations.count
-//        return 1
     }
     
     func orderConversationsBasedOnTime() {
-//        var ordered = [Conversation]()
-        
-        conversations.sort {
-            //            ((($0 as! [String : Any])["match"] as! Int) > (($1 as! [String : Any])["match"] as! Int))
+            conversations.sort {
             let val = ChatViewController.dateFormatter.date(from: ($0).latest_message.date)?.compare(ChatViewController.dateFormatter.date(from: ($1).latest_message.date)!)
             if val == ComparisonResult.orderedDescending {
                 return true
@@ -226,26 +204,14 @@ extension ConversationsViewController : UITableViewDelegate, UITableViewDataSour
                 return false
             }
         }
-        
-//        for conversation in conversations {
-//            //implement some sorting algorithm based on date if there is time
-//            //let currConvDate
-//            let message = conversation.latest_message
-//            let dateString = message.date
-//            let date = ChatViewController.dateFormatter.date(from: dateString)
-//
-//        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         orderConversationsBasedOnTime()
         
         let model = conversations[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier, for: indexPath) as! ConversationTableViewCell
         cell.configure(with: model)
-//        cell.textLabel?.text = "Hello world"
-//        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
@@ -260,8 +226,8 @@ extension ConversationsViewController : UITableViewDelegate, UITableViewDataSour
     }
     
     func openConversation(model : Conversation) {
-        let vc = ChatViewController(otherUser: model.other_user_email, id: model.id)
-        vc.title = model.name
+        let vc = ChatViewController(otherUser: model.other_user_emails, otherNames: model.names, id: model.id)
+        vc.title = model.conv_name
         vc.navigationItem.largeTitleDisplayMode = .never
         self.navigationController?.pushViewController(vc, animated: true)
     }

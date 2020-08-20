@@ -22,45 +22,22 @@ class ProfileViewController: UIViewController {
     
     @IBOutlet weak var emailTextLabel: UILabel!
     
-    
-    //    @IBOutlet var tableView : UITableView!
-    
-    //    let data = ["log out"]
-    
-//    let email = FirebaseAuth.Auth.auth().currentUser?.email
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        //        tableView.delegate = self
-        //        tableView.dataSource = self
         profileImageView.layer.cornerRadius = 75.0
         profileImageView.layer.borderColor = CGColor(srgbRed: 0.15686, green: 0.262745, blue: 0.3058823, alpha: 1)
         profileImageView.layer.borderWidth = 2.2
-//        let email = UserDefaults.standard.value(forKey: "email") as! String
         let email = FirebaseAuth.Auth.auth().currentUser?.email as! String
         let safeEmail = DatabaseManager.safeEmail(email: email) as! String
 
         if safeEmail == nil {
             return
         }
-        print("safe email: \(safeEmail)")
         let path = "images/\(safeEmail)_profile_picture.png"
-        print("image path: \(path)")
+
         
-//        DispatchQueue.main.async {
-//            let username = DatabaseManager.shared.getUsername(email: safeEmail)
-//            self.usernameTextLabel.text = username
-//            print("username: \(username)")
-//
-//        }
-        
-//        let username = UserDefaults.standard.value(forKey: "username") as? String
-//        print("username from user defaults: \(username)")
-        print("email: \(email)")
-        
-        usernameTextLabel.text = email.replacingOccurrences(of: "@test.com", with: "")
         emailTextLabel.text  = email
+        usernameTextLabel.text = UserDefaults.standard.value(forKey: "username") as? String
         
         StorageManager.shared.downloadURL(for: path) { [weak self] (result) in
             switch result {
@@ -90,10 +67,7 @@ class ProfileViewController: UIViewController {
             nav.modalPresentationStyle = .fullScreen
             nav.navigationBar.isHidden = true
             present(nav, animated: true)
-//            let convVC = self.storyboard?.instantiateViewController(withIdentifier: "tabVC") as! UITabBarController
-//            let nav = UINavigationController(rootViewController: convVC)
-//            nav.modalPresentationStyle = .fullScreen
-//            self.present(nav, animated: true)
+
         }
         catch {
             print("failed to log out")
@@ -104,34 +78,3 @@ class ProfileViewController: UIViewController {
 }
 
 
-
-
-//extension ProfileViewController : UITableViewDelegate, UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return data.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-//        cell.textLabel?.text = data[indexPath.row]
-//        cell.textLabel?.textAlignment = .center
-//        cell.textLabel?.textColor = .red
-//        return cell
-//    }
-//
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: true)
-//
-//        do {
-//            try FirebaseAuth.Auth.auth().signOut()
-//
-//            let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "loginVC") as! LoginViewController
-//            let nav = UINavigationController(rootViewController: loginVC)
-//            nav.modalPresentationStyle = .fullScreen
-//            present(nav, animated: true)
-//        }
-//        catch {
-//            print("failed to log out")
-//        }
-//    }
-//}

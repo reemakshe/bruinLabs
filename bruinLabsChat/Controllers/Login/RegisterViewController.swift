@@ -1,102 +1,10 @@
-////
-////  RegisterViewController.swift
-////  bruinLabsChat
-////
-////  Created by Reema Kshetramade on 7/26/20.
-////  Copyright © 2020 Reema Kshetramade. All rights reserved.
-////
 //
-//import UIKit
-//import FirebaseAuth
+//  RegisterViewController.swift
+//  bruinLabsChat
 //
+//  Created by Reema Kshetramade on 7/26/20.
+//  Copyright © 2020 Reema Kshetramade. All rights reserved.
 //
-//class RegisterViewController: UIViewController {
-//
-//
-//    @IBOutlet weak var usernameTextField: UITextField!
-//
-//    @IBOutlet weak var emailTextField: UITextField!
-//
-//    @IBOutlet weak var passwordTextField: UITextField!
-//
-//
-//    @IBOutlet weak var continueButton: UIButton!
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        continueButton.layer.cornerRadius = 10.0
-//    }
-//
-//    func isPasswordValid(_ password : String) -> Bool {
-//
-//           let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")
-//           return passwordTest.evaluate(with: password)
-//    }
-//
-//    @IBAction func didTapContinueButton(_ sender: Any) {
-//
-//        if emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-//           passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-//           usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-//           stateTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" ||
-//           funFactTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) == ""
-//        {
-//        //            errorLabel.text = "Please enter all fields."
-//        //            errorLabel.alpha = 1
-//
-//            let alert = UIAlertController(title: "oops!", message: "please enter all fields", preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: "dismiss", style: .cancel, handler: nil))
-//            present(alert, animated: true)
-//        }
-//
-//
-//        else {
-//
-//            let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-//            let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-//            let username = usernameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-//
-//            DatabaseManager.shared.userExists(with: email) { (exists) in
-//                if exists {
-////                    print("User already exists")
-//                    let alert = UIAlertController(title: "oops!", message: "a user with that email already exists", preferredStyle: .alert)
-//                    alert.addAction(UIAlertAction(title: "try again", style: .cancel, handler: nil))
-//                    self.present(alert, animated: true)
-//                    return
-//                }
-////                print("user does not already exist")
-//            }
-//
-//
-//            if !self.isPasswordValid(password) {
-//                let alert = UIAlertController(title: "oops!", message: "please make sure your password is at least 8 characters, with 1 special character and 1 number", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "try again", style: .cancel, handler: nil))
-//                self.present(alert, animated: true)
-//                return
-//            }
-//
-//            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-//                if error != nil {
-//                    let alert = UIAlertController(title: "oops!", message: "error creating user", preferredStyle: .alert)
-//                    alert.addAction(UIAlertAction(title: "try again", style: .cancel, handler: nil))
-//                    self.present(alert, animated: true)
-//                    return
-//                }
-//
-//                else {
-//                    DatabaseManager.shared.insertUser(with: ChatAppUser(username: username, email: email))
-//                    self.navigationController?.dismiss(animated: true, completion: nil)
-//                }
-//            }
-//
-//        }
-//
-//    }
-//
-//
-//}
-
 
 import UIKit
 import FirebaseAuth
@@ -120,11 +28,9 @@ class RegisterViewController: UIViewController {
     private let imageView: UIImageView = {
          let imageView = UIImageView()
          imageView.image = UIImage(systemName: "heart.circle")
-//        imageView.image = UIImage(named: "heartIcon")
         let randomR = Float.random(in: 0.5..<1)
         let randomG = Float.random(in: 0.5..<1)
         let randomB = Float.random(in: 0.5..<1)
-//         imageView.tintColor = .gray
         imageView.tintColor = UIColor(displayP3Red: CGFloat(randomR), green: CGFloat(randomG), blue: CGFloat(randomB), alpha: 1)
          imageView.contentMode = .scaleAspectFit
          imageView.layer.masksToBounds = true
@@ -206,8 +112,6 @@ class RegisterViewController: UIViewController {
 
 
         view.backgroundColor = UIColor(displayP3Red: 0.843, green: 0.925, blue: 0.925, alpha: 1)
-//        navigationController?.navigationBar.topItem?.title = "create a new group"
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "cancel", style: .done, target: self, action: #selector(dismissSelf))
 
         continueButton.addTarget(self, action: #selector(didTapContinueButton), for: .touchUpInside)
 
@@ -281,9 +185,7 @@ class RegisterViewController: UIViewController {
             let username = usernameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
             let password = passwordTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-//
-//            UserDefaults.standard.set(username, forKey: "username")
-//            UserDefaults.standard.set(email, forKey: "email")
+
             
             DatabaseManager.shared.userExists(with: email) { (exists) in
                 if exists {
@@ -293,7 +195,6 @@ class RegisterViewController: UIViewController {
                     self.present(alert, animated: true)
                     return
                 }
-                //                print("user does not already exist")
             }
             //
             
@@ -337,12 +238,8 @@ class RegisterViewController: UIViewController {
                     print("current user: \(FirebaseAuth.Auth.auth().currentUser?.email)")
                     //change root view controller to pick goals view controller instead of dismissing screen
                     let pickerVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "pickerVC") as! PickGoalsViewController
-//                    let nav = UINavigationController(rootViewController: pickerVC)
-//                    nav.modalPresentationStyle = .fullScreen
-//                    self.present(nav, animated: true)
                     self.navigationController?.pushViewController(pickerVC, animated: true)
                     self.navigationController?.navigationBar.isHidden = true
-//                    self.navigationController?.dismiss(animated: true, completion: nil)
                 }
             }
             
